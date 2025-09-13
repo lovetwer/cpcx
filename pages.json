@@ -1,0 +1,56 @@
+{
+	"pages": [{
+		"path": "pages/index/index",
+		"style": {
+			"navigationBarTitleText": "首页"
+		}
+	}, {
+		"path": "pages/login/login",
+		"style": {
+			"navigationBarTitleText": "登录"
+		}
+	}, {
+		"path": "pages/lottery/lottery",
+		"style": {
+			"navigationBarTitleText": "开奖"
+		}
+	}, {
+		"path": "pages/mine/mine",
+		"style": {
+			"navigationBarTitleText": "我的"
+		}
+	}, {
+		"path": "pages/share/lottery",
+		"style": {
+			"navigationBarTitleText": "彩票详情"
+		}
+	}],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#B8B8B8",
+			"selectedColor": "#5A7D9A",
+		"borderStyle": "#E8F6F3",
+		"backgroundColor": "#FFFFFF",
+		"list": [{
+			"pagePath": "pages/index/index",
+			"iconPath": "/static/tab-home.png",
+			"selectedIconPath": "/static/tab-home-active.png",
+			"text": "首页"
+		}, {
+			"pagePath": "pages/lottery/lottery",
+			"iconPath": "/static/tab-lottery.png",
+			"selectedIconPath": "/static/tab-lottery-active.png",
+			"text": "开奖"
+		}, {
+			"pagePath": "pages/mine/mine",
+			"iconPath": "/static/tab-mine.png",
+			"selectedIconPath": "/static/tab-mine-active.png",
+			"text": "我的"
+		}]
+	}
+}
