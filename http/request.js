@@ -3,7 +3,7 @@
 //'http://localhost:8080'
 // 'http://120.77.0.32:8080'
 //'http://101.126.90.167:8080'
-const BASE_URL = 'https://101.126.90.167:8443'
+const BASE_URL = 'https://101.126.90.167'
 
 // 保存BASE_URL到本地存储，供其他地方使用
 uni.setStorageSync('baseUrl', BASE_URL);
