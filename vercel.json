@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "unpackage/dist/build/web/**",
-      "use": "@vercel/static"
-    }
+  "buildCommand": null,
+  "outputDirectory": "unpackage/dist/build/web",
+  "rewrites": [
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/static/(.*)", "destination": "/static/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
