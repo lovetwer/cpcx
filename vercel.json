@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "buildCommand": "echo 'Build skipped - using pre-built files'",
+  "outputDirectory": "dist/build/web",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
