@@ -1,55 +1,12 @@
-<<<<<<< .mine
-{
-<<<<<<< .mine
-  "dependencies": {
-    "clipboard": "^2.0.11",
-=======
 {
   "name": "cpcx",
   "version": "1.0.0",
->>>>>>> .theirs
-    "dayjs": "^1.11.13"
   "scripts": {
-<<<<<<< .mine
-  }
-}
-
-
-
-
-
-
-=======
     "build": "npm run build:h5",
     "build:h5": "node -e \"console.log('Building H5...'); require('fs').mkdirSync('dist/build/h5', {recursive: true}); require('fs').copyFileSync('index.html', 'dist/build/h5/index.html'); console.log('Build complete')\""
   },
-=======
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
   "dependencies": {
     "clipboard": "^2.0.11",
     "dayjs": "^1.11.13"
   }
 }
->>>>>>> .theirs
