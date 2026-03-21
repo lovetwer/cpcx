@@ -117,11 +117,11 @@ export default {
   onLoad() {
     this.refreshData()
   },
-  
+
   onShow() {
-    // 页面显示时刷新数据，避免重复调用
     this.currentUser = uni.getStorageSync('userName')
-    this.refreshData()
+    // 只刷新我的记录，开奖数据不需要每次都请求
+    this.loadMyRecords()
   },
   
   methods: {

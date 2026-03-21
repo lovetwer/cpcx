@@ -7,14 +7,13 @@
                         <text class="title">个人信息</text>
                         <text class="subtitle">更新您的个人资料</text>
                     </view>
-                    <u-button 
-                        type="primary" 
-                        :customStyle="userLogoutButtonStyle"
-                        @click="openLogoutModal"
-                        class="logout-btn"
-                    >
-                        退出登录
-                    </u-button>
+                    <u-icon 
+                        name="setting" 
+                        color="#828282" 
+                        size="28" 
+                        @click="goToSettings"
+                        class="settings-icon"
+                    ></u-icon>
                 </view>
             </view>
             
@@ -32,14 +31,25 @@
                 
                 <view class="input-group">
                     <view class="input-label">邮箱</view>
-                    <u-input 
-                        v-model="user.email"
-                        placeholder="请填写邮箱"
-                        prefixIcon="email"
-                        :customStyle="inputStyle"
-                        :placeholderStyle="placeholderStyle"
-                        border="none"
-                    ></u-input>
+                    <view class="email-input-wrapper">
+                        <u-input 
+                            v-model="user.email"
+                            placeholder="请填写邮箱"
+                            prefixIcon="email"
+                            :customStyle="{...inputStyle, flex: 1}"
+                            :placeholderStyle="placeholderStyle"
+                            border="none"
+                        ></u-input>
+                        <u-button 
+                            type="primary" 
+                            size="small"
+                            :customStyle="testEmailButtonStyle"
+                            :loading="testingEmail"
+                            @click="testSendEmail"
+                        >
+                            测试
+                        </u-button>
+                    </view>
                 </view>
                 
                 <view class="input-group">
@@ -67,48 +77,13 @@
             </view>
         </view>
         
-        <!-- 自定义退出登录弹窗 -->
-        <view v-if="showLogoutModal" class="modal-overlay" @click="closeLogoutModal">
-            <view class="modal-content" @click.stop>
-                <view class="modal-header">
-                    <text class="modal-title">确认退出</text>
-                </view>
-                <view class="modal-body">
-                    <CustomModal
-                        v-model="showLogoutModal"
-                        :title="'确认退出'"
-                        :cancelText="'取消'"
-                        :confirmText="'确定退出'"
-                        @cancel="closeLogoutModal"
-                        @confirm="confirmLogout"
-                    >
-                        <text class="modal-message">确定要退出登录吗？</text>
-                    </CustomModal>
-                </view>
-                <view class="modal-footer">
-                    <u-button 
-                        type="default" 
-                        :customStyle="cancelButtonStyle"
-                        @click="closeLogoutModal"
-                    >
-                        取消
-                    </u-button>
-                    <u-button 
-                        type="primary" 
-                        :customStyle="confirmButtonStyle"
-                        @click="confirmLogout"
-                    >
-                        确定退出
-                    </u-button>
-                </view>
-            </view>
-        </view>
+
     </view>
 </template>
 
 <script setup>
     import { reactive, ref } from 'vue'
-    import { updateUserInfo, getUserInfo } from '@/http/api.js'
+    import { updateUserInfo, getUserInfo, testSendEmail as sendTestEmail } from '@/http/api.js'
     import { onLoad } from '@dcloudio/uni-app'
     import {
         primaryButtonStyle,
@@ -126,7 +101,7 @@
         status: '0'
     })
     
-    const showLogoutModal = ref(false)
+
     
     // 样式配置
     const inputStyle = {
@@ -141,61 +116,108 @@
         color: '#999'
     }
     
-    const userLogoutButtonStyle = {
-        ...logoutButtonStyle,
-        width: '90px',
+    const userSettingsButtonStyle = {
+        ...primaryButtonStyle,
+        width: '70px',
         height: '36px',
         fontSize: '14px',
         marginTop: '0',
         marginRight: '0'
     }
-    
-    // 弹窗按钮样式
-    const cancelButtonStyle = {
-        width: '100px',
+
+    const testEmailButtonStyle = {
+        width: '70px',
         height: '40px',
-        marginRight: '12px',
-        borderRadius: '8px'
+        fontSize: '14px',
+        marginLeft: '12px',
+        marginTop: '8px',
+        background: '#ffffff',
+        color: '#fa8c16',
+        borderRadius: '8px',
+        border: '1px solid #fa8c16'
     }
+
+    const testingEmail = ref(false)
     
-    const confirmButtonStyle = {
-        width: '100px',
-        height: '40px',
-        borderRadius: '8px'
+
+    
+    const testSendEmail = async () => {
+        if (!user.value.email || user.value.email.trim() === '') {
+            uni.showToast({
+                title: '请先填写邮箱',
+                icon: 'none',
+                duration: 2000
+            })
+            return
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(user.value.email)) {
+            uni.showToast({
+                title: '请输入有效的邮箱地址',
+                icon: 'none',
+                duration: 2000
+            })
+            return
+        }
+
+        testingEmail.value = true
+        uni.showLoading({ title: '发送中...' })
+
+        try {
+            const res = await sendTestEmail(user.value.email)
+            uni.hideLoading()
+
+            if (res.code === 200) {
+                uni.showToast({
+                    title: res.message || '邮件发送成功',
+                    icon: 'success',
+                    duration: 2000
+                })
+            } else {
+                uni.showToast({
+                    title: res.message || '邮件发送失败',
+                    icon: 'none',
+                    duration: 2000
+                })
+            }
+        } catch (err) {
+            uni.hideLoading()
+            console.error('测试邮件发送失败:', err)
+            uni.showToast({
+                title: '发送失败，请检查网络',
+                icon: 'none',
+                duration: 2000
+            })
+        } finally {
+            testingEmail.value = false
+        }
     }
-    
-    const openLogoutModal = () => {
-        showLogoutModal.value = true
-    }
-    
-    const closeLogoutModal = () => {
-        showLogoutModal.value = false
-    }
-    
-    const confirmLogout = () => {
-        uni.removeStorageSync('token')
-        uni.removeStorageSync('userName')
-        uni.removeStorageSync('email')
-        uni.reLaunch({
-            url: '/pages/login/login'
-        })
-    }
-    
-    const logout = () => {
+
+    const goToSettings = () => {
+        // 检测当前运行环境
+        // #ifdef H5
+        // 浏览器环境，显示下载APP提醒
         uni.showModal({
-            title: '提示',
-            content: '确定要退出登录吗？',
-            success: function (res) {
+            title: '下载APP体验更多功能',
+            content: '为了获得更好的体验和完整功能，建议您下载我们的APP。',
+            confirmText: '立即下载',
+            cancelText: '稍后再说',
+            success: (res) => {
                 if (res.confirm) {
-                    uni.removeStorageSync('token')
-                    uni.removeStorageSync('userName')
-                    uni.removeStorageSync('email')
-                    uni.reLaunch({
-                        url: '/pages/login/login'
-                    })
+                    // 跳转到下载链接
+                    window.open('https://101.126.90.167/static/app/cpcx_1.0.0.apk', '_blank')
                 }
             }
         })
+        // #endif
+        
+        // #ifndef H5
+        // 非浏览器环境，正常跳转到设置页面
+        uni.navigateTo({
+            url: '/pages/settings/settings'
+        })
+        // #endif
     }
     
     const update = () => {
@@ -348,9 +370,16 @@
 
 
 
-    .logout-btn {
+    .settings-icon {
         margin: 0 !important;
         flex-shrink: 0;
+        padding: 8px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    
+    .settings-icon:hover {
+        transform: rotate(90deg);
     }
 
     .profile-card {
@@ -394,6 +423,11 @@
         margin-bottom: 20px;
     }
 
+    .email-input-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
     .input-label {
         font-size: 14px;
         color: #333;
@@ -432,65 +466,5 @@
         transform: scale(0.98);
     }
 
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
-    
-    .modal-content {
-        background: #fff;
-        border-radius: 16px;
-        padding: 24px;
-        width: 75%;
-        max-width: 280px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        animation: modalSlideIn 0.3s ease-out;
-    }
-    
-    .modal-header {
-        text-align: center;
-        margin-bottom: 16px;
-    }
-    
-    .modal-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: #333;
-    }
-    
-    .modal-body {
-        text-align: center;
-        margin-bottom: 24px;
-    }
-    
-    .modal-message {
-        font-size: 14px;
-        color: #666;
-        line-height: 1.4;
-    }
-    
-    .modal-footer {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-    
-    @keyframes modalSlideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-50px) scale(0.9);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-    }
+
 </style>

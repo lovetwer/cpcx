@@ -176,6 +176,25 @@ export const updateUserInfo = (username, data) => {
   return request(`/api/user/updateUser`, 'POST', data);
 };
 
+/**
+ * 注销用户账号
+ * @param {string} userName - 用户名
+ */
+export const deleteUserAccount = (userName) => {
+  return request(`/api/user/delete?userName=${encodeURIComponent(userName)}`, 'POST');
+};
+
+// ===== 测试邮件接口 =====
+
+/**
+ * 测试发送邮件
+ * @param {string} to - 收件人邮箱地址
+ * @param {number} [prize=1] - 中奖等级
+ */
+export const testSendEmail = (to, prize = 1) => {
+  return request(`/api/test/send-email?to=${encodeURIComponent(to)}&prize=${prize}`, 'GET');
+};
+
 // ===== AI相关接口 =====
 
 /**
@@ -207,7 +226,7 @@ export const generateNumbers = (params) => {
  * @param {string} [formData.user] - 用户名
  */
 export const uploadLotteryImage = (filePath, formData = {}) => {
-  return uploadFile('/upload', filePath, formData);
+  return uploadFile('/api/upload', filePath, formData);
 };
 
 /**
@@ -215,7 +234,7 @@ export const uploadLotteryImage = (filePath, formData = {}) => {
  * @param {string} uploadBatchId - 上传批次ID
  */
 export const getUploadStatus = (uploadBatchId) => {
-  return request('/upload/status', 'GET', { uploadBatchId });
+  return request('/api/upload/status', 'GET', { uploadBatchId });
 };
 
 // // ===== 兼容旧接口（逐步废弃）=====

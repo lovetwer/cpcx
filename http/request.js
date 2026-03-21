@@ -3,12 +3,13 @@
 //'http://localhost:8080'
 // 'http://120.77.0.32:8080'
 //'http://101.126.90.167:8080'
-const BASE_URL = 'https://101.126.90.167'
-
+// const BASE_URL = 'https://101.126.90.167'
+//const BASE_URL = 'http://192.168.31.86:8080'
+const BASE_URL = 'https://lhbkkueeculj.ap-northeast-1.clawcloudrun.com'
 // 保存BASE_URL到本地存储，供其他地方使用
 uni.setStorageSync('baseUrl', BASE_URL);
 
-const request = (url, method, data = {}, header = {}, timeout = 30000) => {
+const request = (url, method, data = {}, header = {}, timeout = 300000) => {
   return new Promise((resolve, reject) => {
     // 获取当前页面路径
     const pages = getCurrentPages();

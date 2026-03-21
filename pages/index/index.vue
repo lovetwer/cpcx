@@ -44,7 +44,7 @@
                 :label="item.name"
                 :name="item.name"
                 :customStyle="{
-                  margin: '10rpx',
+                  margin: '6rpx',
                   boxShadow: checkRedBoxValue.includes(item.name)
                     ? '0 4rpx 12rpx rgba(255,77,79,0.3)'
                     : 'none',
@@ -77,7 +77,7 @@
                 :label="item.name"
                 :name="item.name"
                 :customStyle="{
-                  margin: '10rpx',
+                  margin: '6rpx',
                   boxShadow: checkBlueBoxValue.includes(item.name)
                     ? '0 4rpx 12rpx rgba(24,144,255,0.3)'
                     : 'none',
@@ -206,6 +206,7 @@
           <view class="section-header">
             <text class="section-title">已选号码</text>
             <view class="header-actions">
+
               <u-icon name="reload" color="#1890ff" size="24" @click="refreshData" style="margin-right: 20rpx;"></u-icon>
               <view class="upload-button" @click="chooseImage">
                 <u-icon name="camera-fill" color="#1890ff" size="24"></u-icon>
@@ -256,10 +257,13 @@
         </view>
       </view>
     </view>
+
+
   </view>
 </template>
 
 <script setup>
+
 import { 
   addLottery, 
   getLotteryByUser, 
@@ -285,6 +289,7 @@ import {
   smallButtonStyle,
   miniButtonStyle
 } from '@/utils/button-styles.js'
+import pushService from '@/utils/push-service.js'
 
 // 响应式状态
 const date = ref('')
@@ -299,6 +304,7 @@ const latestData = ref([])
 const loadingLatestData = ref(false)
 const aiLoading = ref(false)
 const uploading = ref(false)
+
 
 // 常量
 const list = reactive(['双色球', '大乐透'])
@@ -613,7 +619,7 @@ const deleteData = item => {
     })
 }
 
-onMounted(() => {
+onMounted(async () => {
   cpForm.value.openTime = timeFormat(new Date(), 'yyyy-mm-dd')
   cpForm.value.user = uni.getStorageSync('userName') || ''
 
@@ -622,6 +628,16 @@ onMounted(() => {
     uni.navigateTo({ url: '/pages/login/login' })
   } else {
     loadLatestData()
+    
+    // 初始化推送服务
+    // #ifdef APP-PLUS
+    try {
+      await pushService.init()
+      console.log('推送服务初始化完成')
+    } catch (error) {
+      console.error('推送服务初始化失败:', error)
+    }
+    // #endif
   }
 })
 
@@ -652,6 +668,8 @@ const refreshData = () => {
   loadLatestData()
 }
 
+
+
 // 上传图片
 const uploadFile = (filePath) => {
   uploading.value = true
@@ -676,27 +694,62 @@ const uploadFile = (filePath) => {
   Promise.race([uploadPromise, timeoutPromise])
     .then(res => {
       uni.hideLoading() // 上传完成后立即关闭loading
-      
+
       if (res.code === 200) {
-        const uploadBatchId = res.data?.uploadBatchId || res.uploadBatchId
+        const resultData = res.data || {}
+        const successCount = resultData.successCount || 0
+        const failCount = resultData.failCount || 0
+        const details = resultData.details || []
+        const message = resultData.message || ''
+
+        if (failCount > 0 && successCount === 0) {
+          uni.showToast({
+            title: message || '上传处理失败',
+            icon: 'none',
+            duration: 2000
+          })
+        } else {
+          uni.showToast({
+            title: message || `上传成功！共处理${successCount}注彩票`,
+            icon: 'success',
+            duration: 2000
+          })
+
+          // 如果返回了详情数据，将其转换为当前列表格式并添加
+          if (details && details.length > 0) {
+            const formattedDetails = details.map(item => {
+              const isSSQ = cpForm.value.type === 'ssq'
+              const blueCount = isSSQ ? 1 : 2
+              const blueBallsArray = item.blueBalls ? item.blueBalls.split(',') : []
+
+              return {
+                id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                type: cpForm.value.type,
+                redBall: item.redBalls,
+                blueBall: item.blueBalls,
+                openTime: item.openTime,
+                winChance: item.probability ? parseFloat(item.probability.replace('%', '')) : 0,
+                probability: item.probability
+              }
+            })
+
+            // 将新数据添加到列表前面
+            latestData.value = [...formattedDetails, ...latestData.value]
+          }
+
+          // 上传成功后刷新数据确保一致性
+          setTimeout(() => {
+            loadLatestData()
+          }, 1500)
+        }
+      } else {
+        console.error('服务器返回错误:', res)
         uni.showToast({
-          title: '上传成功',
-          icon: 'success',
-          duration: 1500
+          title: res.message || `上传失败(${res.code || '未知错误'})`,
+          icon: 'none'
         })
-        
-        // 上传成功后直接刷新数据
-        setTimeout(() => {
-          loadLatestData()
-        }, 1000)
-       } else {
-         console.error('服务器返回错误:', res)
-         uni.showToast({
-           title: res.message || `上传失败(${res.code || '未知错误'})`,
-           icon: 'none'
-         })
-       }
-     })
+      }
+    })
     .catch(err => {
       uni.hideLoading() // 出错时也关闭loading
       console.error('上传失败详情:', err)
@@ -1020,5 +1073,29 @@ onUnmounted(() => {
   color: #666;
   font-size: 28rpx;
   padding: 20rpx 0;
+}
+
+/* 推送设置弹窗样式 */
+.push-modal {
+  background: #fff;
+  border-radius: 20rpx 20rpx 0 0;
+  padding: 30rpx;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
 }
 </style>
