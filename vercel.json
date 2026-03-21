@@ -1,7 +1,14 @@
 {
   "version": 2,
-  "buildCommand": "echo 'Build skipped - using pre-built files'",
-  "outputDirectory": "dist/build/web",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/build/web"
+      }
+    }
+  ],
   "routes": [
     {
       "src": "/assets/(.*)",
