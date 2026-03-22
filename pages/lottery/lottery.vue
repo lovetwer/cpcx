@@ -470,7 +470,7 @@ export default {
       };
 
       const encodedData = encodeURIComponent(btoa(JSON.stringify(shareData)));
-      const shareLink = `https://cpcx.netlify.app/#/pages/share/lottery?data=${encodedData}`;
+      const shareLink = `https://cpcx.us.ci/#/pages/share/lottery?data=${encodedData}`;
       
       // 构建分享内容
       const lotteryType = record.type === 'dlt' ? '大乐透' : '双色球';
