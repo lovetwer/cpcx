@@ -95,7 +95,7 @@ export default {
       try {
         // 解码并解析数据
         const decodedData = decodeURIComponent(options.data);
-        const jsonData = JSON.parse(atob(decodedData));
+        const jsonData = JSON.parse(decodeURIComponent(atob(decodedData)));
         
         // 更新组件数据
         this.lotteryData = jsonData;

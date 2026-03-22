@@ -373,13 +373,13 @@ export default {
       };
       
       // 分享基础URL - 仅用于分享链接
-      const SHARE_BASE_URL = 'https://cpcx.gopc.top';
+      const SHARE_BASE_URL = 'https://cpcx.us.ci';
       
       // 直接构建分享URL
-      const encodedData = encodeURIComponent(btoa(JSON.stringify(shareData)));
+      const encodedData = encodeURIComponent(btoa(encodeURIComponent(JSON.stringify(shareData))));
       let shareLink;
       
-      // 统一使用Netlify域名
+      // 统一使用域名
       shareLink = `${SHARE_BASE_URL}/#/pages/share/lottery?data=${encodedData}`;
       
       shareContent += `查看详情：${shareLink}`;
@@ -469,7 +469,7 @@ export default {
         user: record.user
       };
 
-      const encodedData = encodeURIComponent(btoa(JSON.stringify(shareData)));
+      const encodedData = encodeURIComponent(btoa(encodeURIComponent(JSON.stringify(shareData))));
       const shareLink = `https://cpcx.us.ci/#/pages/share/lottery?data=${encodedData}`;
       
       // 构建分享内容
