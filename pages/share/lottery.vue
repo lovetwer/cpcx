@@ -66,6 +66,13 @@
     </view>
     
     <button class="share-button" @click="shareAgain">再次分享</button>
+    
+    <!-- 下载APP区域 -->
+    <view class="download-section">
+      <text class="download-title">想要更多功能？</text>
+      <text class="download-desc">下载APP体验拍照识号、AI选号等更多功能</text>
+      <button class="download-button" @click="downloadApp">立即下载APP</button>
+    </view>
   </view>
 </template>
 
@@ -161,6 +168,50 @@ export default {
       } else {
         return 'pending';
       }
+    },
+    
+    // 下载APP
+    downloadApp() {
+      const apkUrl = 'https://jyqwwftobbtmiccsccjd.supabase.co/storage/v1/object/public/apk/cpcxapp.apk';
+      
+      // #ifdef H5
+      // H5环境直接下载
+      window.location.href = apkUrl;
+      // #endif
+      
+      // #ifndef H5
+      // 其他环境使用uni.downloadFile
+      uni.showLoading({ title: '下载中...' });
+      uni.downloadFile({
+        url: apkUrl,
+        success: (res) => {
+          uni.hideLoading();
+          if (res.statusCode === 200) {
+            uni.showToast({
+              title: '下载成功',
+              icon: 'success'
+            });
+            // 打开文件
+            uni.openDocument({
+              filePath: res.tempFilePath,
+              showMenu: true
+            });
+          } else {
+            uni.showToast({
+              title: '下载失败',
+              icon: 'none'
+            });
+          }
+        },
+        fail: () => {
+          uni.hideLoading();
+          uni.showToast({
+            title: '下载失败',
+            icon: 'none'
+          });
+        }
+      });
+      // #endif
     },
     
     // 再次分享
@@ -417,5 +468,47 @@ export default {
   align-items: center;
   font-size: 32rpx;
   margin-top: 40rpx;
+}
+
+.download-section {
+  width: 90%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  margin-top: 60rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 8rpx 30rpx rgba(102, 126, 234, 0.3);
+}
+
+.download-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-bottom: 16rpx;
+}
+
+.download-desc {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-bottom: 30rpx;
+  line-height: 1.5;
+}
+
+.download-button {
+  width: 70%;
+  height: 76rpx;
+  background-color: #FFFFFF;
+  color: #667eea;
+  border-radius: 38rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30rpx;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.2);
 }
 </style>

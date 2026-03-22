@@ -206,7 +206,7 @@
             success: (res) => {
                 if (res.confirm) {
                     // 跳转到下载链接
-                    window.open('https://101.126.90.167/static/app/cpcx_1.0.0.apk', '_blank')
+                    window.open('https://jyqwwftobbtmiccsccjd.supabase.co/storage/v1/object/public/apk/cpcxapp.apk', '_blank')
                 }
             }
         })

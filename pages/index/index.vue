@@ -340,6 +340,7 @@ const rest = () => {
   blueBallArr.value = ssqBallBlue
   winningProbability.value = null
   calculating.value = false
+  hasAskedForProbability = false
 }
 
 const selectDate = arr => {
@@ -362,6 +363,7 @@ const blueBoxChange = arr => {
 }
 
 let probabilityTimer = null
+let hasAskedForProbability = false
 
 const calculateWinningProbability = () => {
   if (probabilityTimer) clearTimeout(probabilityTimer)
@@ -376,32 +378,55 @@ const calculateWinningProbability = () => {
 
   if (!isComplete) {
     winningProbability.value = null
+    hasAskedForProbability = false
     return
   }
 
+  // 如果已经询问过，不再重复询问
+  if (hasAskedForProbability) {
+    return
+  }
+
+  // 显示确认弹窗
+  uni.showModal({
+    title: '计算中奖概率',
+    content: '是否使用AI计算当前选号的中奖概率？',
+    confirmText: '计算',
+    cancelText: '跳过',
+    success: (res) => {
+      hasAskedForProbability = true
+      if (res.confirm) {
+        doCalculateProbability()
+      } else {
+        // 用户跳过，设置概率为0
+        winningProbability.value = 0
+      }
+    }
+  })
+}
+
+const doCalculateProbability = () => {
   calculating.value = true
   winningProbability.value = null
 
-  probabilityTimer = setTimeout(() => {
-    const red = checkRedBoxValue.value.join(',')
-    const blue = checkBlueBoxValue.value.join(',')
-    const number = `${red}+${blue}`
+  const red = checkRedBoxValue.value.join(',')
+  const blue = checkBlueBoxValue.value.join(',')
+  const number = `${red}+${blue}`
 
-    calculateWinProbability({ number, type: cpForm.value.type })
-      .then(res => {
-        if (res.code === 20000 || res.code === 200) {
-          winningProbability.value = res.data || 0
-        } else {
-          winningProbability.value = 0
-        }
-        calculating.value = false
-      })
-      .catch(err => {
-        console.error('AI 计算失败', err)
+  calculateWinProbability({ number, type: cpForm.value.type })
+    .then(res => {
+      if (res.code === 20000 || res.code === 200) {
+        winningProbability.value = res.data || 0
+      } else {
         winningProbability.value = 0
-        calculating.value = false
-      })
-  }, 300)
+      }
+      calculating.value = false
+    })
+    .catch(err => {
+      console.error('AI 计算失败', err)
+      winningProbability.value = 0
+      calculating.value = false
+    })
 }
 
 const changeType = idx => {
@@ -539,8 +564,9 @@ const submitNum = () => {
     return
   }
 
-  // 设置中奖概率
-  cpForm.value.winChance = winningProbability.value || 0
+  // 设置中奖概率，如果返回的是数字则添加%，否则直接使用
+  const prob = winningProbability.value
+  cpForm.value.winChance = typeof prob === 'string' && prob.includes('%') ? prob : (prob || 0) + '%'
 
   submitting.value = true
   addLottery(cpForm.value)
@@ -710,7 +736,7 @@ const uploadFile = (filePath) => {
           })
         } else {
           uni.showToast({
-            title: message || `上传成功！共处理${successCount}注彩票`,
+            title: '上传成功',
             icon: 'success',
             duration: 2000
           })
