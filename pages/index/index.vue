@@ -152,31 +152,7 @@
             </view>
           </view>
 
-          <!-- 中奖概率显示 -->
-          <view class="probability-section">
-            <view class="probability-header">
-              <text class="probability-title">中奖概率</text>
-            </view>
-            <view class="probability-content">
-              <text v-if="calculating" class="probability-value medium-probability">
-                计算中…
-              </text>
-              <text
-                v-else-if="winningProbability !== null"
-                class="probability-value"
-                :class="{
-                  'high-probability': winningProbability > 50,
-                  'medium-probability': winningProbability >= 20 && winningProbability <= 50,
-                  'low-probability': winningProbability < 20
-                }"
-              >
-                {{ winningProbability }}
-              </text>
-              <text v-else class="probability-value low-probability">
-                {{ cpForm.type === 'ssq' ? '请选6红1蓝' : '请选5红2蓝' }}
-              </text>
-            </view>
-          </view>
+
         </view>
 
         <!-- 提交按钮 -->
@@ -230,9 +206,6 @@
                   <text class="red-balls">红: {{ item.redBall }}</text>
                   <text class="blue-balls">蓝: {{ item.blueBall }}</text>
                 </view>
-                <view class="data-probability">
-                  中奖概率: <text class="probability-text">{{ item.winChance }}</text>
-                </view>
               </view>
               <view class="data-actions">
                 <u-button
@@ -269,7 +242,6 @@ import {
   getLotteryByUser, 
   deleteLottery, 
   generateNumbers, 
-  calculateWinProbability, 
   uploadLotteryImage, 
   getUploadStatus 
 } from '@/http/api.js'
@@ -298,8 +270,6 @@ const show = ref(false)
 const checkRedBoxValue = ref([])
 const checkBlueBoxValue = ref([])
 const submitting = ref(false)
-const winningProbability = ref(null)
-const calculating = ref(false)
 const latestData = ref([])
 const loadingLatestData = ref(false)
 const aiLoading = ref(false)
@@ -316,8 +286,7 @@ const cpForm = ref({
   redBall: '',
   blueBall: '',
   openTime: '',
-  type: 'ssq',
-  winChance: 0
+  type: 'ssq'
 })
 
 // 球数据
@@ -326,21 +295,14 @@ const blueBallArr = ref(ssqBallBlue)
 
 // 函数
 const rest = () => {
-  if (probabilityTimer) clearTimeout(probabilityTimer)
-  probabilityTimer = null
-
   checkRedBoxValue.value = []
   checkBlueBoxValue.value = []
   cpForm.value.redBall = ''
   cpForm.value.blueBall = ''
   cpForm.value.openTime = timeFormat(new Date(), 'yyyy-mm-dd')
   cpForm.value.type = 'ssq'
-  cpForm.value.winChance = 0
   redBallArr.value = ssqBallRed
   blueBallArr.value = ssqBallBlue
-  winningProbability.value = null
-  calculating.value = false
-  hasAskedForProbability = false
 }
 
 const selectDate = arr => {
@@ -353,86 +315,14 @@ const selectDate = arr => {
 const redBoxChange = arr => {
   checkRedBoxValue.value = arr
   cpForm.value.redBall = arr.join(',')
-  calculateWinningProbability()
 }
 
 const blueBoxChange = arr => {
   checkBlueBoxValue.value = arr
   cpForm.value.blueBall = arr.join(',')
-  calculateWinningProbability()
-}
-
-let probabilityTimer = null
-let hasAskedForProbability = false
-
-const calculateWinningProbability = () => {
-  if (probabilityTimer) clearTimeout(probabilityTimer)
-
-  const isSSQ = cpForm.value.type === 'ssq'
-  const requiredRed = isSSQ ? 6 : 5
-  const requiredBlue = isSSQ ? 1 : 2
-
-  const isComplete =
-    checkRedBoxValue.value.length === requiredRed &&
-    checkBlueBoxValue.value.length === requiredBlue
-
-  if (!isComplete) {
-    winningProbability.value = null
-    hasAskedForProbability = false
-    return
-  }
-
-  // 如果已经询问过，不再重复询问
-  if (hasAskedForProbability) {
-    return
-  }
-
-  // 显示确认弹窗
-  uni.showModal({
-    title: '计算中奖概率',
-    content: '是否使用AI计算当前选号的中奖概率？',
-    confirmText: '计算',
-    cancelText: '跳过',
-    success: (res) => {
-      hasAskedForProbability = true
-      if (res.confirm) {
-        doCalculateProbability()
-      } else {
-        // 用户跳过，设置概率为0
-        winningProbability.value = 0
-      }
-    }
-  })
-}
-
-const doCalculateProbability = () => {
-  calculating.value = true
-  winningProbability.value = null
-
-  const red = checkRedBoxValue.value.join(',')
-  const blue = checkBlueBoxValue.value.join(',')
-  const number = `${red}+${blue}`
-
-  calculateWinProbability({ number, type: cpForm.value.type })
-    .then(res => {
-      if (res.code === 20000 || res.code === 200) {
-        winningProbability.value = res.data || 0
-      } else {
-        winningProbability.value = 0
-      }
-      calculating.value = false
-    })
-    .catch(err => {
-      console.error('AI 计算失败', err)
-      winningProbability.value = 0
-      calculating.value = false
-    })
 }
 
 const changeType = idx => {
-  if (probabilityTimer) clearTimeout(probabilityTimer)
-  probabilityTimer = null
-
   current.value = idx
   rest()
   
@@ -511,9 +401,6 @@ const aiSelectNumbers = () => {
         cpForm.value.redBall = formattedRedBalls.join(',')
         cpForm.value.blueBall = formattedBlueBalls.join(',')
         
-        // 重新计算中奖概率
-        calculateWinningProbability()
-        
         uni.showToast({ 
           title: 'AI选号成功', 
           icon: 'success',
@@ -563,10 +450,6 @@ const submitNum = () => {
     uni.showToast({ title: '请选择开奖时间', icon: 'none' })
     return
   }
-
-  // 设置中奖概率，如果返回的是数字则添加%，否则直接使用
-  const prob = winningProbability.value
-  cpForm.value.winChance = typeof prob === 'string' && prob.includes('%') ? prob : (prob || 0) + '%'
 
   submitting.value = true
   addLottery(cpForm.value)
@@ -753,9 +636,7 @@ const uploadFile = (filePath) => {
                 type: cpForm.value.type,
                 redBall: item.redBalls,
                 blueBall: item.blueBalls,
-                openTime: item.openTime,
-                winChance: item.probability ? parseFloat(item.probability.replace('%', '')) : 0,
-                probability: item.probability
+                openTime: item.openTime
               }
             })
 
@@ -807,7 +688,6 @@ const uploadFile = (filePath) => {
 }
 
 onUnmounted(() => {
-  if (probabilityTimer) clearTimeout(probabilityTimer)
 })
 </script>
 
@@ -970,67 +850,7 @@ onUnmounted(() => {
   }
 }
 
-/* 中奖概率面板 ------------------------------------------------ */
-.probability-section {
-  margin-top: 20rpx;
-  padding-top: 20rpx;
-  border-top: 1rpx solid rgba(0,0,0,.05);
-  .probability-header { margin-bottom: 12rpx; }
-  .probability-title {
-    font-size: 26rpx;
-    font-weight: 600;
-    color: #1a1a1a;
-    position: relative;
-    padding-left: 16rpx;
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 6rpx;
-      height: 20rpx;
-      background: linear-gradient(to bottom,#1890ff,#40a9ff);
-      border-radius: 3rpx;
-    }
-  }
-  .probability-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .probability-value {
-      font-size: 32rpx;
-      font-weight: 700;
-      padding: 16rpx 32rpx;
-      border-radius: 24rpx;
-      transition: all .3s ease;
-      text-align: center;
-      &.high-probability {
-        color: #52c41a;
-        background: linear-gradient(135deg,rgba(82,196,26,.1),rgba(82,196,26,.2));
-        box-shadow: 0 4rpx 12rpx rgba(82,196,26,.2);
-      }
-      &.medium-probability {
-        color: #faad14;
-        background: linear-gradient(135deg,rgba(250,173,20,.1),rgba(250,173,20,.2));
-        box-shadow: 0 4rpx 12rpx rgba(250,173,20,.2);
-        animation: pulse 1.5s ease-in-out infinite;
-      }
-      &.low-probability {
-        color: #666;
-        background: linear-gradient(135deg,rgba(102,102,102,.1),rgba(102,102,102,.2));
-        box-shadow: 0 4rpx 12rpx rgba(102,102,102,.1);
-        font-size: 28rpx;
-        font-weight: 500;
-      }
-    }
-  }
-  @keyframes pulse {
-    0% { opacity: 1; transform: scale(1); }
-    50% { opacity: .7; transform: scale(.98); }
-    100% { opacity: 1; transform: scale(1); }
-  }
-}
+/* loading / empty */
 
 /* 按钮组 ------------------------------------------------ */
 .submit-section { margin-top: 30rpx; }
@@ -1082,15 +902,6 @@ onUnmounted(() => {
 .red-balls, .blue-balls { font-size: 24rpx; font-weight: 500; }
 .red-balls { color: #ff4d4f; }
 .blue-balls { color: #1890ff; }
-.data-probability {
-  margin-top: 12rpx;
-  font-size: 24rpx;
-  color: #666;
-}
-.data-probability .probability-text {
-  color: #1890ff;
-  font-weight: 600;
-}
 .data-actions { margin-left: 20rpx; }
 
 /* loading / empty */

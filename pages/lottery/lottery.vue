@@ -51,7 +51,7 @@
               <text class="lottery-type">{{ record.type === 'dlt' ? '大乐透' : '双色球' }}</text>
               <text class="record-time">{{ record.openTime }}</text>
             </view>
-            <text class="record-status" :class="getStatusClass(record.status)">{{ getStatusText(record.status, record.winChance) }}</text>
+            <text class="record-status" :class="getStatusClass(record.status)">{{ getStatusText(record.status) }}</text>
           </view>
           
           <view class="number-display">
@@ -249,9 +249,9 @@ export default {
     },
     
     // 获取状态文本
-    getStatusText(status, winChance) {
+    getStatusText(status) {
       if (status === null || status === undefined || status === 'pending') {
-        return winChance ? `${winChance}` : '未开奖'
+        return '未开奖'
       }
       const statusMap = {
         '0': '未中奖',
@@ -351,7 +351,7 @@ export default {
       
       records.forEach((record, index) => {
         const lotteryType = record.type === 'dlt' ? '大乐透' : '双色球';
-        const status = this.getStatusText(record.status, record.winChance);
+        const status = this.getStatusText(record.status);
         shareContent += `${index + 1}. ${lotteryType} - ${record.openTime}\n`;
         shareContent += `   红球: ${record.redBall}\n`;
         shareContent += `   蓝球: ${record.blueBall}\n`;
@@ -373,7 +373,7 @@ export default {
       };
       
       // 分享基础URL - 仅用于分享链接
-      const SHARE_BASE_URL = 'https://cpcx.us.ci';
+      const SHARE_BASE_URL = 'https://cpcx.800820882.xyz';
       
       // 直接构建分享URL
       const encodedData = encodeURIComponent(btoa(encodeURIComponent(JSON.stringify(shareData))));
@@ -470,11 +470,11 @@ export default {
       };
 
       const encodedData = encodeURIComponent(btoa(encodeURIComponent(JSON.stringify(shareData))));
-      const shareLink = `https://cpcx.us.ci/#/pages/share/lottery?data=${encodedData}`;
+      const shareLink = `https://cpcx.800820882.xyz/#/pages/share/lottery?data=${encodedData}`;
       
       // 构建分享内容
       const lotteryType = record.type === 'dlt' ? '大乐透' : '双色球';
-      const status = this.getStatusText(record.status, record.winChance);
+      const status = this.getStatusText(record.status);
       
       // 分享内容
       const shareTitle = `我的${lotteryType}投注记录`;

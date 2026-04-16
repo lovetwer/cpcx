@@ -222,7 +222,7 @@ class PushService {
         if (todayLotteries.length > 0) {
           // 检查是否有中奖记录
           const winningLotteries = todayLotteries.filter(item => 
-            item.status === 'won' || item.winChance > 80 // 假设中奖概率>80%为中奖
+            item.status === 'won'
           )
 
           if (winningLotteries.length > 0) {
@@ -328,19 +328,13 @@ class PushService {
       content = `大乐透 ${dltCount} 注`
     }
 
-    // 添加中奖概率信息
-    const avgProbability = lotteries.reduce((sum, item) => sum + (item.winChance || 0), 0) / count
-    if (avgProbability > 0) {
-      content += `，平均中奖概率 ${avgProbability.toFixed(1)}%`
-    }
-
     content += '\n点击查看详情，祝您好运！🍀'
 
     return {
       title,
       content,
       type: 'lottery_result',
-      data: { count, ssqCount, dltCount, avgProbability }
+      data: { count, ssqCount, dltCount }
     }
   }
 

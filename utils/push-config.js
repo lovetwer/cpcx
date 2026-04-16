@@ -84,7 +84,7 @@ export const PUSH_CONFIG = {
     LOTTERY_RESULT: {
       title: '🎯 今日选号统计',
       getContent: (data) => {
-        const { count, ssqCount, dltCount, avgProbability } = data
+        const { count, ssqCount, dltCount } = data
         let content = `已选 ${count} 注号码`
         
         if (ssqCount > 0 && dltCount > 0) {
@@ -94,11 +94,7 @@ export const PUSH_CONFIG = {
         } else if (dltCount > 0) {
           content += `（大乐透 ${dltCount} 注）`
         }
-        
-        if (avgProbability > 0) {
-          content += `\n平均中奖概率：${avgProbability.toFixed(1)}%`
-        }
-        
+
         content += '\n点击查看详情，祝您好运！🍀'
         return content
       }

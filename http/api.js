@@ -2,8 +2,11 @@
 
 import request, { uploadFile } from './request';
 
-// 获取基础URL
-const BASE_URL = uni.getStorageSync('baseUrl') || 'http://101.126.90.167';
+// 获取基础URL（API接口）
+const BASE_URL = uni.getStorageSync('baseUrl') || 'https://lhbkkueeculj.ap-northeast-1.clawcloudrun.com';
+
+// 分享链接域名（前端页面）
+const SHARE_DOMAIN = 'https://cpcx.800820882.xyz';
 
 // ===== 彩票管理相关接口 =====
 
@@ -63,10 +66,9 @@ export const deleteLottery = (id) => {
  * 更新彩票状态
  * @param {number|string} id - 记录ID
  * @param {string} status - 状态
- * @param {string} [winChance] - 中奖信息
  */
-export const updateLotteryStatus = (id, status, winChance) => {
-  return request(`/api/lottery/${id}/status`, 'PUT', { status, winChance });
+export const updateLotteryStatus = (id, status) => {
+  return request(`/api/lottery/${id}/status`, 'PUT', { status });
 };
 
 /**
@@ -96,43 +98,22 @@ export const generateShareLink = (record) => {
   // 将对象转换为Base64编码的字符串
   const encodedData = encodeURIComponent(btoa(JSON.stringify(shareData)));
   
-  // 获取当前应用的域名或基础路径
-  let baseUrl;
-  
-  // 根据平台确定基础URL和路径格式
-  let shareUrl;
-  
+  // 根据平台确定分享链接域名
   // #ifdef H5
-  // H5环境使用相对路径，使用hash路由格式
-  shareUrl = `${window.location.origin}/#/pages/share/lottery?data=${encodedData}`;
-  // #endif
-  
-  // #ifdef APP-PLUS
-  // App环境使用完整URL，确保使用HTTP协议和80端口，使用hash路由格式
-  let appBaseUrl = BASE_URL.replace(/:\d+/, ':80'); // 替换任何端口为80
-  // 确保使用HTTP协议
-  appBaseUrl = appBaseUrl.replace(/^https:/i, 'http:');
-  if (!appBaseUrl.startsWith('http')) {
-    shareUrl = `http://${appBaseUrl}/#/pages/share/lottery?data=${encodedData}`;
-  } else {
-    shareUrl = `${appBaseUrl}/#/pages/share/lottery?data=${encodedData}`;
+  // H5环境优先用当前访问域名，确保页面能正常打开
+  let shareOrigin = window.location.origin;
+  // 如果当前不是分享域名（比如本地开发），则使用分享域名
+  if (!shareOrigin.includes('cpcx.')) {
+    shareOrigin = SHARE_DOMAIN;
   }
   // #endif
-  
-  // #ifndef H5 || APP-PLUS
-  // 其他环境，使用hash路由格式
-  let otherBaseUrl = BASE_URL.replace(/:\d+/, ':80'); // 替换任何端口为80
-  // 确保使用HTTP协议
-  otherBaseUrl = otherBaseUrl.replace(/^https:/i, 'http:');
-  if (!otherBaseUrl.startsWith('http')) {
-    shareUrl = `http://${otherBaseUrl}/#/pages/share/lottery?data=${encodedData}`;
-  } else {
-    shareUrl = `${otherBaseUrl}/#/pages/share/lottery?data=${encodedData}`;
-  }
+
+  // #ifndef H5
+  // 非H5环境直接使用分享域名
+  let shareOrigin = SHARE_DOMAIN;
   // #endif
-  
-  // 返回分享链接
-  return shareUrl;
+
+  return `${shareOrigin}/#/pages/share/lottery?data=${encodedData}`;
 };
 
 // ===== 用户相关接口 =====
@@ -195,17 +176,7 @@ export const testSendEmail = (to, prize = 1) => {
   return request(`/api/test/send-email?to=${encodeURIComponent(to)}&prize=${prize}`, 'GET');
 };
 
-// ===== AI相关接口 =====
-
-/**
- * AI计算中奖概率
- * @param {Object} params - 计算参数
- * @param {string} params.number - 号码组合
- * @param {string} params.type - 彩票类型
- */
-export const calculateWinProbability = (params) => {
-  return request('/api/lottery/probability', 'GET', params);
-};
+// ===== AI智能选号接口 =====
 
 /**
  * AI智能选号
@@ -248,10 +219,6 @@ export const getUploadStatus = (uploadBatchId) => {
 // export const login = loginUser;
 // export const findUserByName = getUserInfo;
 // export const updateUser = (data) => updateUserInfo(data.username, data);
-
-// // AI相关兼容接口
-// export const aiGuess = calculateWinProbability;
-// export const aiChance = generateNumbers;
 
 // // 文件上传兼容接口
 // export const uploadImage = uploadLotteryImage;
