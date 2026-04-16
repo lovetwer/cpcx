@@ -438,12 +438,15 @@ const submitNum = () => {
   const redCount = cpForm.value.redBall ? cpForm.value.redBall.split(',').length : 0
   const blueCount = cpForm.value.blueBall ? cpForm.value.blueBall.split(',').length : 0
 
-  if (redCount < minRed) {
-    uni.showToast({ title: `红球至少选择${minRed}个`, icon: 'none' })
+  const maxRed = cpForm.value.type === 'ssq' ? 6 : 5
+  const maxBlue = cpForm.value.type === 'ssq' ? 1 : 2
+
+  if (redCount !== maxRed) {
+    uni.showToast({ title: `红球必须选择${maxRed}个`, icon: 'none' })
     return
   }
-  if (blueCount < minBlue) {
-    uni.showToast({ title: `蓝球至少选择${minBlue}个`, icon: 'none' })
+  if (blueCount !== maxBlue) {
+    uni.showToast({ title: `蓝球必须选择${maxBlue}个`, icon: 'none' })
     return
   }
   if (!cpForm.value.openTime) {
