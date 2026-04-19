@@ -17,7 +17,7 @@ export const primaryButtonStyle = {
 export const secondaryButtonStyle = {
     backgroundColor: '#fff', // 白色
     color: '#28a745',
-    border: '1px solid #28a745',
+    border: 'none',
     borderRadius: '8px',
     padding: '8px 16px',
     fontSize: '14px',
@@ -38,9 +38,9 @@ export const dangerButtonStyle = {
   transition: 'all 0.3s ease'
 }
 
-// AI按钮样式 - 黄红渐变
+// AI按钮样式 - 红色渐变
 export const aiButtonStyle = {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'linear-gradient(135deg, #FF3030 0%, #FF6B6B 100%)',
     color: '#ffffff',
     border: 'none',
     borderRadius: '8px',
@@ -55,15 +55,15 @@ export const aiButtonStyle = {
     justifyContent: 'center',
     position: 'relative',
     overflow: 'hidden',
-    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+    boxShadow: '0 4px 15px rgba(255, 48, 48, 0.4)',
     ':hover': {
-        background: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)',
+        background: 'linear-gradient(135deg, #FF4545 0%, #FF8080 100%)',
         transform: 'translateY(-2px)',
-        boxShadow: '0 8px 25px rgba(102, 126, 234, 0.6)'
+        boxShadow: '0 8px 25px rgba(255, 48, 48, 0.6)'
     },
     ':active': {
         transform: 'translateY(0) scale(0.98)',
-        boxShadow: '0 2px 10px rgba(102, 126, 234, 0.4)'
+        boxShadow: '0 2px 10px rgba(255, 48, 48, 0.4)'
     },
     ':before': {
         content: '""',
@@ -112,7 +112,7 @@ export const miniButtonStyle = {
 export const logoutButtonStyle = {
     background: '#ffffff',
     color: '#989898',
-    border: '1px solid #dcdcdc',
+    border: 'none',
     borderRadius: '6px',
     padding: '8px 16px',
     fontSize: '14px',
@@ -124,12 +124,10 @@ export const logoutButtonStyle = {
     alignItems: 'center',
     justifyContent: 'center',
     ':hover': {
-        background: '#dc2626',
-        borderColor: '#dc2626'
+        background: '#dc2626'
     },
     ':active': {
         background: '#b91c1c',
-        borderColor: '#b91c1c',
         transform: 'scale(0.95)'
     }
 };
@@ -141,12 +139,12 @@ export const disabledButtonStyle = {
   boxShadow: 'none'
 }
 export const saveButtonStyle = {
-    backgroundColor: '#ff7777', // 绿色
+    backgroundColor: '#ff7777',
     color: '#fff',
     borderRadius: '8px',
     padding: '8px 16px',
     fontSize: '14px',
     height: '36px',
     lineHeight: '36px',
-	border: '1px solid #e1e1e1',
+    border: 'none'
 };

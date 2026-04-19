@@ -79,6 +79,14 @@ export const checkPrize = () => {
 };
 
 /**
+ * 获取历史开奖数据
+ * @param {string} type - 彩票类型：ssq/dlt
+ */
+export const getLotteryHistory = (type = 'ssq') => {
+  return request(`/api/lottery/history?type=${type}`, 'GET');
+};
+
+/**
  * 生成彩票记录分享链接
  * @param {Object} record - 彩票记录对象
  * @returns {string} - 分享链接
@@ -185,7 +193,7 @@ export const testSendEmail = (to, prize = 1) => {
  * @param {number} [params.count=1] - 生成数量
  */
 export const generateNumbers = (params) => {
-  return request('/api/lottery/aiChance', 'GET', params);
+  return request('/api/lottery/ai-generate', 'POST', params);
 };
 
 // ===== 文件上传相关接口 =====
@@ -206,6 +214,24 @@ export const uploadLotteryImage = (filePath, formData = {}) => {
  */
 export const getUploadStatus = (uploadBatchId) => {
   return request('/api/upload/status', 'GET', { uploadBatchId });
+};
+
+// ===== 验奖相关接口 =====
+
+/**
+ * 单注验奖查询
+ * @param {Object} params - 验奖参数
+ * @param {string} params.type - 彩票类型：ssq/dlt
+ * @param {string} params.betType - 投注类型：single/complex/dantuo
+ * @param {string} params.redBall - 红球号码（单式/复式）
+ * @param {string} params.blueBall - 蓝球号码（单式/复式）
+ * @param {string} params.danRedBall - 红球胆码（胆拖）
+ * @param {string} params.tuoRedBall - 红球拖码（胆拖）
+ * @param {string} params.danBlueBall - 蓝球胆码（胆拖）
+ * @param {string} params.tuoBlueBall - 蓝球拖码（胆拖）
+ */
+export const checkSinglePrize = (params) => {
+  return request('/api/lottery/check-single-prize', 'POST', params);
 };
 
 // // ===== 兼容旧接口（逐步废弃）=====

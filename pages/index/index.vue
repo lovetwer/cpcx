@@ -16,24 +16,57 @@
     <view class="main-content">
       <!-- 选球卡片 -->
       <view class="selection-card">
+        <!-- 玩法选择器 -->
+        <view class="play-mode-section">
+          <view class="play-mode-header">
+            <text class="play-mode-title">选择玩法</text>
+          </view>
+          <view class="play-mode-tabs">
+            <view 
+              class="mode-tab" 
+              :class="{ active: playMode === 'single' }"
+              @click="changePlayMode('single')"
+            >
+              <text class="mode-text">单式</text>
+              <text class="mode-desc">{{ playModeDesc.single }}</text>
+            </view>
+            <view 
+              class="mode-tab" 
+              :class="{ active: playMode === 'multiple' }"
+              @click="changePlayMode('multiple')"
+            >
+              <text class="mode-text">复式</text>
+              <text class="mode-desc">{{ playModeDesc.multiple }}</text>
+            </view>
+            <view 
+              class="mode-tab" 
+              :class="{ active: playMode === 'dantuo' }"
+              @click="changePlayMode('dantuo')"
+            >
+              <text class="mode-text">胆拖</text>
+              <text class="mode-desc">{{ playModeDesc.dantuo }}</text>
+            </view>
+          </view>
+        </view>
+
         <!-- AI选号按钮 -->
-        <view class="ai-section">
+        <view class="ai-section" v-if="playMode === 'single'">
           <u-button
             type="primary"
             @click="aiSelectNumbers"
             :loading="aiLoading"
             :customStyle="aiButtonStyle"
           >
-            {{ aiLoading ? 'AI计算中...' : '🤖 AI智能选号' }}
+            {{ aiLoading ? 'AI计算中...' : 'AI智能选号' }}
           </u-button>
         </view>
 
-        <!-- 红球选择区 -->
-        <view class="ball-section">
+        <!-- 单式/复式模式 - 红球选择区 -->
+        <view class="ball-section" v-if="playMode !== 'dantuo'">
           <view class="section-header">
             <view class="title-wrapper">
               <text class="section-title">红球</text>
-              <text class="ball-count">已选 {{ checkRedBoxValue.length }} 个</text>
+              <text class="ball-count">已选 {{ checkRedBoxValue.length }} 个{{ playMode === 'multiple' ? '（复式）' : '' }}</text>
             </view>
           </view>
           <view class="ball-grid">
@@ -61,16 +94,117 @@
           </view>
         </view>
 
-        <!-- 蓝球选择区 -->
-        <view class="ball-section">
+        <!-- 胆拖模式 - 红球胆码选择区 -->
+        <view class="ball-section" v-if="playMode === 'dantuo'">
           <view class="section-header">
             <view class="title-wrapper">
-              <text class="section-title">蓝球</text>
-              <text class="ball-count">已选 {{ checkBlueBoxValue.length }} 个</text>
+              <text class="section-title dan-title">红球胆码</text>
+              <text class="ball-count">已选 {{ redDanValue.length }} 个（必中）</text>
+            </view>
+          </view>
+          <view class="ball-grid">
+            <u-checkbox-group placement="row" @change="redDanChange" v-model="redDanValue">
+              <u-checkbox
+                v-for="(item, index) in redBallArr"
+                :key="index"
+                :label="item.name"
+                :name="item.name"
+                :disabled="redTuoValue.includes(item.name)"
+                :customStyle="{
+                  margin: '6rpx',
+                  boxShadow: redDanValue.includes(item.name)
+                    ? '0 4rpx 12rpx rgba(255,77,79,0.3)'
+                    : 'none',
+                  transition: 'all 0.3s ease'
+                }"
+                labelColor="#ff4d4f"
+                activeColor="#ff4d4f"
+                iconColor="#ffffff"
+                inactiveColor="#ff4d4f"
+                size="26"
+                shape="circle"
+              />
+            </u-checkbox-group>
+          </view>
+        </view>
+
+        <!-- 胆拖模式 - 红球拖码选择区 -->
+        <view class="ball-section" v-if="playMode === 'dantuo'">
+          <view class="section-header">
+            <view class="title-wrapper">
+              <text class="section-title tuo-title">红球拖码</text>
+              <text class="ball-count">已选 {{ redTuoValue.length }} 个（选1个）</text>
+            </view>
+          </view>
+          <view class="ball-grid">
+            <u-checkbox-group placement="row" @change="redTuoChange" v-model="redTuoValue">
+              <u-checkbox
+                v-for="(item, index) in redBallArr"
+                :key="index"
+                :label="item.name"
+                :name="item.name"
+                :disabled="redDanValue.includes(item.name)"
+                :customStyle="{
+                  margin: '6rpx',
+                  boxShadow: redTuoValue.includes(item.name)
+                    ? '0 4rpx 12rpx rgba(255,165,0,0.3)'
+                    : 'none',
+                  transition: 'all 0.3s ease'
+                }"
+                labelColor="#ffa500"
+                activeColor="#ffa500"
+                iconColor="#ffffff"
+                inactiveColor="#ffa500"
+                size="26"
+                shape="circle"
+              />
+            </u-checkbox-group>
+          </view>
+        </view>
+
+        <!-- 单式/复式模式 - 蓝球选择区 -->
+        <view class="ball-section" v-if="playMode !== 'dantuo'">
+          <view class="section-header">
+            <view class="title-wrapper">
+              <text class="section-title blue-title">蓝球</text>
+              <text class="ball-count">已选 {{ checkBlueBoxValue.length }} 个{{ playMode === 'multiple' ? '（复式）' : '' }}</text>
             </view>
           </view>
           <view class="ball-grid">
             <u-checkbox-group placement="row" @change="blueBoxChange" v-model="checkBlueBoxValue">
+              <u-checkbox
+                v-for="(item, index) in blueBallArr"
+                :key="index"
+                :label="item.name"
+                :name="item.name"
+                :customStyle="{
+                  margin: '6rpx',
+                  boxShadow: checkBlueBoxValue.includes(item.name)
+                    ? '0 4rpx 12rpx rgba(24,144,255,0.3)'
+                    : 'none',
+                  transition: 'all 0.3s ease'
+                }"
+                labelColor="#1890ff"
+                activeColor="#1890ff"
+                iconColor="#ffffff"
+                inactiveColor="#1890ff"
+                size="26"
+                shape="circle"
+              />
+            </u-checkbox-group>
+          </view>
+        </view>
+
+        <!-- 胆拖模式 - 蓝球选择区（普通选择，非胆拖） -->
+        <view class="ball-section" v-if="playMode === 'dantuo'">
+          <view class="section-header">
+            <view class="title-wrapper">
+              <text class="section-title blue-title">蓝球</text>
+              <text class="ball-count">已选 {{ checkBlueBoxValue.length }} 个</text>
+            </view>
+          </view>
+          <view class="ball-grid">
+            <u-checkbox-group placement="row" @change="blueBoxChangeDantuo" v-model="checkBlueBoxValue">
               <u-checkbox
                 v-for="(item, index) in blueBallArr"
                 :key="index"
@@ -116,43 +250,48 @@
         <view class="realtime-selection" v-if="cpForm.redBall || cpForm.blueBall">
           <view class="realtime-header">
             <text class="realtime-title">当前选号</text>
+            <view class="bet-info" v-if="betCount > 0">
+              <text class="bet-count">{{ playMode === 'single' ? '单式' : playMode === 'multiple' ? '复式' : '胆拖' }} {{ betCount }}注</text>
+            </view>
           </view>
 
-          <view class="realtime-numbers">
-            <view
-              v-if="cpForm.redBall && cpForm.redBall.length"
-              class="realtime-group"
-            >
-              <text class="group-label">红球:</text>
+          <!-- 胆拖模式显示胆码和拖码 -->
+          <view class="realtime-numbers" v-if="playMode === 'dantuo'">
+            <view v-if="redDanValue.length" class="realtime-group">
+              <text class="group-label dan-label">红胆:</text>
               <view class="number-list">
-                <text
-                  v-for="(num, idx) in cpForm.redBall.split(',')"
-                  :key="idx"
-                  class="realtime-number red-number"
-                >
-                  {{ num }}
-                </text>
+                <text v-for="(num, idx) in redDanValue" :key="idx" class="realtime-number red-number dan-ball">{{ num }}</text>
               </view>
             </view>
-
-            <view
-              v-if="cpForm.blueBall && cpForm.blueBall.length"
-              class="realtime-group"
-            >
+            <view v-if="redTuoValue.length" class="realtime-group">
+              <text class="group-label tuo-label">红拖:</text>
+              <view class="number-list">
+                <text v-for="(num, idx) in redTuoValue" :key="idx" class="realtime-number red-number">{{ num }}</text>
+              </view>
+            </view>
+            <view v-if="cpForm.blueBall && cpForm.blueBall.length" class="realtime-group">
               <text class="group-label">蓝球:</text>
               <view class="number-list">
-                <text
-                  v-for="(num, idx) in cpForm.blueBall.split(',')"
-                  :key="idx"
-                  class="realtime-number blue-number"
-                >
-                  {{ num }}
-                </text>
+                <text v-for="(num, idx) in cpForm.blueBall.split(',')" :key="idx" class="realtime-number blue-number">{{ num }}</text>
               </view>
             </view>
           </view>
 
-
+          <!-- 单式/复式模式显示 -->
+          <view class="realtime-numbers" v-else>
+            <view v-if="cpForm.redBall && cpForm.redBall.length" class="realtime-group">
+              <text class="group-label">红球:</text>
+              <view class="number-list">
+                <text v-for="(num, idx) in cpForm.redBall.split(',')" :key="idx" class="realtime-number red-number">{{ num }}</text>
+              </view>
+            </view>
+            <view v-if="cpForm.blueBall && cpForm.blueBall.length" class="realtime-group">
+              <text class="group-label">蓝球:</text>
+              <view class="number-list">
+                <text v-for="(num, idx) in cpForm.blueBall.split(',')" :key="idx" class="realtime-number blue-number">{{ num }}</text>
+              </view>
+            </view>
+          </view>
         </view>
 
         <!-- 提交按钮 -->
@@ -275,6 +414,23 @@ const loadingLatestData = ref(false)
 const aiLoading = ref(false)
 const uploading = ref(false)
 
+// 玩法模式：single(单式), multiple(复式), dantuo(胆拖)
+const playMode = ref('single')
+const playModeDesc = reactive({
+  single: '固定号码',
+  multiple: '多号组合',
+  dantuo: '胆码+拖码'
+})
+
+// 胆拖模式专用
+const redDanValue = ref([])  // 红球胆码
+const redTuoValue = ref([])  // 红球拖码
+const blueDanValue = ref([]) // 蓝球胆码
+const blueTuoValue = ref([]) // 蓝球拖码
+
+// 注数计算
+const betCount = ref(1)
+
 
 // 常量
 const list = reactive(['双色球', '大乐透'])
@@ -297,12 +453,139 @@ const blueBallArr = ref(ssqBallBlue)
 const rest = () => {
   checkRedBoxValue.value = []
   checkBlueBoxValue.value = []
+  redDanValue.value = []
+  redTuoValue.value = []
+  blueDanValue.value = []
+  blueTuoValue.value = []
   cpForm.value.redBall = ''
   cpForm.value.blueBall = ''
   cpForm.value.openTime = timeFormat(new Date(), 'yyyy-mm-dd')
   cpForm.value.type = 'ssq'
   redBallArr.value = ssqBallRed
   blueBallArr.value = ssqBallBlue
+  betCount.value = 1
+}
+
+// 切换玩法模式
+const changePlayMode = (mode) => {
+  playMode.value = mode
+  // 清空所有选择
+  checkRedBoxValue.value = []
+  checkBlueBoxValue.value = []
+  redDanValue.value = []
+  redTuoValue.value = []
+  blueDanValue.value = []
+  blueTuoValue.value = []
+  cpForm.value.redBall = ''
+  cpForm.value.blueBall = ''
+  betCount.value = 1
+}
+
+// 蓝球选择变化（用于胆拖模式）
+const blueBoxChangeDantuo = (arr) => {
+  checkBlueBoxValue.value = arr
+  updateFormFromDantuo()
+  calculateBetCount()
+}
+
+// 计算组合数 C(n, m)
+const combination = (n, m) => {
+  if (m > n || m < 0) return 0
+  if (m === 0 || m === n) return 1
+  let result = 1
+  for (let i = 0; i < m; i++) {
+    result = result * (n - i) / (i + 1)
+  }
+  return Math.round(result)
+}
+
+// 计算注数
+const calculateBetCount = () => {
+  const isSSQ = cpForm.value.type === 'ssq'
+  const requiredRed = isSSQ ? 6 : 5
+  const requiredBlue = isSSQ ? 1 : 2
+
+  if (playMode.value === 'single') {
+    // 单式：固定数量
+    const redCount = checkRedBoxValue.value.length
+    const blueCount = checkBlueBoxValue.value.length
+    if (redCount === requiredRed && blueCount === requiredBlue) {
+      betCount.value = 1
+    } else {
+      betCount.value = 0
+    }
+  } else if (playMode.value === 'multiple') {
+    // 复式：组合计算
+    const redCount = checkRedBoxValue.value.length
+    const blueCount = checkBlueBoxValue.value.length
+    if (redCount >= requiredRed && blueCount >= requiredBlue) {
+      const redComb = combination(redCount, requiredRed)
+      const blueComb = combination(blueCount, requiredBlue)
+      betCount.value = redComb * blueComb
+    } else {
+      betCount.value = 0
+    }
+  } else if (playMode.value === 'dantuo') {
+    // 胆拖：红球胆码+拖码，蓝球普通选择
+    const redDanCount = redDanValue.value.length
+    const redTuoCount = redTuoValue.value.length
+    const blueCount = checkBlueBoxValue.value.length
+
+    // 红球需要选够：胆码 + 拖码组合 = requiredRed
+    // 拖码至少需要选 requiredRed - redDanCount 个
+    const needRedTuo = requiredRed - redDanCount
+
+    if (redDanCount >= 0 && redDanCount < requiredRed && 
+        redTuoCount >= needRedTuo && redTuoCount > 0 &&
+        blueCount >= requiredBlue) {
+      const redComb = combination(redTuoCount, needRedTuo)
+      const blueComb = combination(blueCount, requiredBlue)
+      betCount.value = redComb * blueComb
+    } else {
+      betCount.value = 0
+    }
+  }
+
+  return betCount.value
+}
+
+// 胆拖模式 - 红球胆码变化
+const redDanChange = (arr) => {
+  redDanValue.value = arr
+  updateFormFromDantuo()
+  calculateBetCount()
+}
+
+// 胆拖模式 - 红球拖码变化
+const redTuoChange = (arr) => {
+  redTuoValue.value = arr
+  updateFormFromDantuo()
+  calculateBetCount()
+}
+
+// 胆拖模式 - 蓝球胆码变化
+const blueDanChange = (arr) => {
+  blueDanValue.value = arr
+  updateFormFromDantuo()
+  calculateBetCount()
+}
+
+// 胆拖模式 - 蓝球拖码变化
+const blueTuoChange = (arr) => {
+  blueTuoValue.value = arr
+  updateFormFromDantuo()
+  calculateBetCount()
+}
+
+// 从胆拖数据更新表单
+const updateFormFromDantuo = () => {
+  // 红球：胆码 + 拖码
+  const allRed = [...redDanValue.value, ...redTuoValue.value].sort((a, b) => parseInt(a) - parseInt(b))
+  cpForm.value.redBall = allRed.join(',')
+  
+  // 蓝球：普通选择（非胆拖）
+  const allBlue = [...checkBlueBoxValue.value].sort((a, b) => parseInt(a) - parseInt(b))
+  cpForm.value.blueBall = allBlue.join(',')
 }
 
 const selectDate = arr => {
@@ -315,15 +598,18 @@ const selectDate = arr => {
 const redBoxChange = arr => {
   checkRedBoxValue.value = arr
   cpForm.value.redBall = arr.join(',')
+  calculateBetCount()
 }
 
 const blueBoxChange = arr => {
   checkBlueBoxValue.value = arr
   cpForm.value.blueBall = arr.join(',')
+  calculateBetCount()
 }
 
 const changeType = idx => {
   current.value = idx
+  playMode.value = 'single'  // 重置玩法模式
   rest()
   
   if (idx === 0) {
@@ -355,16 +641,28 @@ const aiSelectNumbers = () => {
       uni.hideLoading()
       
       if ((res.code === 20000 || res.code === 200) && res.data) {
-        // 适配新的数据格式
+        // 适配新的数据格式 - recommendations数组
         let redBallsArray = []
         let blueBallsArray = []
+        let analysisText = ''
         
-        // 处理红球数据 - 新格式是 data.redBalls
-        if (res.data.redBalls && Array.isArray(res.data.redBalls)) {
+        // 新格式：data.recommendations[0].redBalls/blueBalls
+        if (res.data.recommendations && Array.isArray(res.data.recommendations) && res.data.recommendations.length > 0) {
+          const recommendation = res.data.recommendations[0]
+          if (recommendation.redBalls && Array.isArray(recommendation.redBalls)) {
+            redBallsArray = recommendation.redBalls
+          }
+          if (recommendation.blueBalls && Array.isArray(recommendation.blueBalls)) {
+            blueBallsArray = recommendation.blueBalls
+          }
+          if (recommendation.analysis) {
+            analysisText = recommendation.analysis
+          }
+        }
+        // 兼容旧格式
+        else if (res.data.redBalls && Array.isArray(res.data.redBalls)) {
           redBallsArray = res.data.redBalls
         }
-        
-        // 处理蓝球数据 - 新格式是 data.blueBalls
         if (res.data.blueBalls && Array.isArray(res.data.blueBalls)) {
           blueBallsArray = res.data.blueBalls
         }
@@ -374,20 +672,16 @@ const aiSelectNumbers = () => {
         
         // 确保数据格式一致
         const formattedRedBalls = redBallsArray.map(ball => {
-          // 如果是数字，转为字符串并补零
           if (typeof ball === 'number') {
             return String(ball).padStart(2, '0')
           }
-          // 如果已经是字符串格式，确保两位数
           return String(ball).padStart(2, '0')
         })
         
         const formattedBlueBalls = blueBallsArray.map(ball => {
-          // 如果是数字，转为字符串并补零
           if (typeof ball === 'number') {
             return String(ball).padStart(2, '0')
           }
-          // 如果已经是字符串格式，确保两位数
           return String(ball).padStart(2, '0')
         })
         
@@ -401,11 +695,21 @@ const aiSelectNumbers = () => {
         cpForm.value.redBall = formattedRedBalls.join(',')
         cpForm.value.blueBall = formattedBlueBalls.join(',')
         
-        uni.showToast({ 
-          title: 'AI选号成功', 
-          icon: 'success',
-          duration: 2000
-        })
+        // 显示AI分析（如果有）
+        if (analysisText) {
+          uni.showModal({
+            title: 'AI选号分析',
+            content: analysisText,
+            showCancel: false,
+            confirmText: '知道了'
+          })
+        } else {
+          uni.showToast({ 
+            title: 'AI选号成功', 
+            icon: 'success',
+            duration: 2000
+          })
+        }
       } else {
         console.error('AI选号接口返回错误:', res)
         uni.showToast({ 
@@ -432,23 +736,67 @@ const aiSelectNumbers = () => {
 }
 
 const submitNum = () => {
-  const minRed = cpForm.value.type === 'ssq' ? 6 : 5
-  const minBlue = cpForm.value.type === 'ssq' ? 1 : 2
+  const isSSQ = cpForm.value.type === 'ssq'
+  const requiredRed = isSSQ ? 6 : 5
+  const requiredBlue = isSSQ ? 1 : 2
 
-  const redCount = cpForm.value.redBall ? cpForm.value.redBall.split(',').length : 0
-  const blueCount = cpForm.value.blueBall ? cpForm.value.blueBall.split(',').length : 0
+  // 根据玩法模式验证
+  if (playMode.value === 'single') {
+    // 单式：固定数量
+    const redCount = checkRedBoxValue.value.length
+    const blueCount = checkBlueBoxValue.value.length
+    if (redCount !== requiredRed) {
+      uni.showToast({ title: `红球必须选择${requiredRed}个`, icon: 'none' })
+      return
+    }
+    if (blueCount !== requiredBlue) {
+      uni.showToast({ title: `蓝球必须选择${requiredBlue}个`, icon: 'none' })
+      return
+    }
+  } else if (playMode.value === 'multiple') {
+    // 复式：至少固定数量
+    const redCount = checkRedBoxValue.value.length
+    const blueCount = checkBlueBoxValue.value.length
+    if (redCount < requiredRed) {
+      uni.showToast({ title: `红球至少选择${requiredRed}个`, icon: 'none' })
+      return
+    }
+    if (blueCount < requiredBlue) {
+      uni.showToast({ title: `蓝球至少选择${requiredBlue}个`, icon: 'none' })
+      return
+    }
+    if (betCount.value === 0) {
+      uni.showToast({ title: '请选择有效的号码组合', icon: 'none' })
+      return
+    }
+  } else if (playMode.value === 'dantuo') {
+    // 胆拖：红球胆码+拖码，蓝球普通选择
+    const redDanCount = redDanValue.value.length
+    const redTuoCount = redTuoValue.value.length
+    const blueCount = checkBlueBoxValue.value.length
 
-  const maxRed = cpForm.value.type === 'ssq' ? 6 : 5
-  const maxBlue = cpForm.value.type === 'ssq' ? 1 : 2
-
-  if (redCount !== maxRed) {
-    uni.showToast({ title: `红球必须选择${maxRed}个`, icon: 'none' })
-    return
+    if (redDanCount >= requiredRed) {
+      uni.showToast({ title: `红球胆码最多${requiredRed - 1}个`, icon: 'none' })
+      return
+    }
+    if (redDanCount + redTuoCount < requiredRed) {
+      uni.showToast({ title: `红球胆码+拖码至少${requiredRed}个`, icon: 'none' })
+      return
+    }
+    if (redTuoCount < 1) {
+      uni.showToast({ title: '红球拖码至少1个', icon: 'none' })
+      return
+    }
+    if (blueCount < requiredBlue) {
+      uni.showToast({ title: `蓝球至少选择${requiredBlue}个`, icon: 'none' })
+      return
+    }
+    if (betCount.value === 0) {
+      uni.showToast({ title: '请选择有效的号码组合', icon: 'none' })
+      return
+    }
   }
-  if (blueCount !== maxBlue) {
-    uni.showToast({ title: `蓝球必须选择${maxBlue}个`, icon: 'none' })
-    return
-  }
+
   if (!cpForm.value.openTime) {
     uni.showToast({ title: '请选择开奖时间', icon: 'none' })
     return
@@ -739,6 +1087,67 @@ onUnmounted(() => {
   max-width: 1200rpx;
   margin: 0 auto;
 }
+
+// 玩法选择器样式
+.play-mode-section {
+  margin-bottom: 30rpx;
+  position: relative;
+  z-index: 1;
+}
+.play-mode-header {
+  margin-bottom: 16rpx;
+}
+.play-mode-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+.play-mode-tabs {
+  display: flex;
+  gap: 16rpx;
+}
+.mode-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 16rpx;
+  background: #f5f7fa;
+  border-radius: 16rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.3s ease;
+  &.active {
+    background: linear-gradient(135deg, #FF3030 0%, #FF6B6B 100%);
+    border-color: #FF3030;
+    .mode-text, .mode-desc {
+      color: #fff;
+    }
+  }
+}
+.mode-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+.mode-desc {
+  font-size: 20rpx;
+  color: #999;
+}
+
+// 胆码拖码标题样式
+.dan-title {
+  color: #ff4d4f !important;
+}
+.tuo-title {
+  color: #ffa500 !important;
+}
+.blue-title {
+  &::before {
+    background: linear-gradient(to bottom, #1890ff, #40a9ff) !important;
+  }
+}
+
 .selection-card {
   background: linear-gradient(145deg, #ffffff, #f9fafc);
   border-radius: 28rpx;
@@ -825,7 +1234,12 @@ onUnmounted(() => {
   border-radius: 20rpx;
   box-shadow: 0 4rpx 16rpx rgba(0,0,0,.04);
   border: 1rpx solid rgba(255,255,255,.8);
-  .realtime-header { margin-bottom: 20rpx; }
+  .realtime-header { 
+    margin-bottom: 20rpx; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .realtime-title {
     font-size: 28rpx; font-weight: 600; color: #1a1a1a;
     position: relative; padding-left: 16rpx;
@@ -836,9 +1250,21 @@ onUnmounted(() => {
       border-radius: 3rpx;
     }
   }
+  .bet-info {
+    background: linear-gradient(135deg, #FF3030 0%, #FF6B6B 100%);
+    padding: 8rpx 20rpx;
+    border-radius: 20rpx;
+  }
+  .bet-count {
+    font-size: 24rpx;
+    color: #fff;
+    font-weight: 500;
+  }
   .realtime-numbers { display: flex; flex-direction: column; gap: 16rpx; }
   .realtime-group { display: flex; align-items: center; }
   .group-label { font-size: 26rpx; color: #666; margin-right: 16rpx; min-width: 70rpx; }
+  .dan-label { color: #ff4d4f !important; font-weight: 600; }
+  .tuo-label { color: #ffa500 !important; font-weight: 600; }
   .number-list { display: flex; flex-wrap: wrap; gap: 12rpx; }
   .realtime-number {
     width: 48rpx; height: 48rpx; line-height: 48rpx; text-align: center;
@@ -850,6 +1276,15 @@ onUnmounted(() => {
     }
     &.red-number { background: linear-gradient(135deg,#ff4d4f,#ff7875); color: #fff; }
     &.blue-number { background: linear-gradient(135deg,#1890ff,#40a9ff); color: #fff; }
+    &.dan-ball { 
+      box-shadow: 0 0 0 3rpx rgba(255,215,0,0.6);
+      &::before {
+        content: '胆'; position: absolute; top: -4rpx; right: -4rpx;
+        font-size: 16rpx; background: #ffd700; color: #333;
+        width: 24rpx; height: 24rpx; line-height: 24rpx;
+        border-radius: 50%; z-index: 1;
+      }
+    }
   }
 }
 

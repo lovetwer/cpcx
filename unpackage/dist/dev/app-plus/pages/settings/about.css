@@ -1,0 +1,282 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.u-empty[data-v-ac70166d],
+.u-empty__wrap[data-v-ac70166d],
+.u-tabs[data-v-ac70166d],
+.u-tabs__wrapper[data-v-ac70166d],
+.u-tabs__wrapper__scroll-view-wrapper[data-v-ac70166d],
+.u-tabs__wrapper__scroll-view[data-v-ac70166d],
+.u-tabs__wrapper__nav[data-v-ac70166d],
+.u-tabs__wrapper__nav__line[data-v-ac70166d],
+.up-empty[data-v-ac70166d],
+.up-empty__wrap[data-v-ac70166d],
+.up-tabs[data-v-ac70166d],
+.up-tabs__wrapper[data-v-ac70166d],
+.up-tabs__wrapper__scroll-view-wrapper[data-v-ac70166d],
+.up-tabs__wrapper__scroll-view[data-v-ac70166d],
+.up-tabs__wrapper__nav[data-v-ac70166d],
+.up-tabs__wrapper__nav__line[data-v-ac70166d] {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  align-items: stretch;
+  align-content: flex-start;
+}
+@font-face {
+  font-family: "uicon-iconfont";
+  src: url("https://at.alicdn.com/t/font_2225171_8kdcwk4po24.ttf") format("truetype");
+}
+.u-icon[data-v-ac70166d] {
+  display: flex;
+  align-items: center;
+}
+.u-icon--left[data-v-ac70166d] {
+  flex-direction: row-reverse;
+  align-items: center;
+}
+.u-icon--right[data-v-ac70166d] {
+  flex-direction: row;
+  align-items: center;
+}
+.u-icon--top[data-v-ac70166d] {
+  flex-direction: column-reverse;
+  justify-content: center;
+}
+.u-icon--bottom[data-v-ac70166d] {
+  flex-direction: column;
+  justify-content: center;
+}
+.u-icon__icon[data-v-ac70166d] {
+  font-family: uicon-iconfont;
+  position: relative;
+
+  display: flex;
+
+  flex-direction: row;
+  align-items: center;
+}
+.u-icon__icon--primary[data-v-ac70166d] {
+  color: #3c9cff;
+}
+.u-icon__icon--success[data-v-ac70166d] {
+  color: #5ac725;
+}
+.u-icon__icon--error[data-v-ac70166d] {
+  color: #f56c6c;
+}
+.u-icon__icon--warning[data-v-ac70166d] {
+  color: #f9ae3d;
+}
+.u-icon__icon--info[data-v-ac70166d] {
+  color: #909399;
+}
+.u-icon__img[data-v-ac70166d] {
+  height: auto;
+  will-change: transform;
+}
+.u-icon__label[data-v-ac70166d] {
+  line-height: 1;
+}
+
+.container[data-v-e7b2a66e] {
+  min-height: 100vh;
+  background: #f5f7fa;
+  padding: 20px;
+}
+.about-card[data-v-e7b2a66e] {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+.card-header[data-v-e7b2a66e] {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 24px 0;
+}
+.app-logo[data-v-e7b2a66e] {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+.app-name[data-v-e7b2a66e] {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 8px;
+}
+.app-version[data-v-e7b2a66e] {
+  font-size: 14px;
+  color: #666;
+  display: block;
+}
+.info-list[data-v-e7b2a66e] {
+  width: 100%;
+}
+.info-section[data-v-e7b2a66e] {
+  margin-bottom: 32px;
+}
+.section-title[data-v-e7b2a66e] {
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.section-label[data-v-e7b2a66e] {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+.info-item[data-v-e7b2a66e] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f8f9fa;
+}
+.info-item[data-v-e7b2a66e]:last-child {
+  border-bottom: none;
+}
+.info-label[data-v-e7b2a66e] {
+  font-size: 14px;
+  color: #666;
+}
+.info-value[data-v-e7b2a66e] {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+.feature-list[data-v-e7b2a66e] {
+  margin-top: 8px;
+}
+.feature-item[data-v-e7b2a66e] {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f8f9fa;
+}
+.feature-item[data-v-e7b2a66e]:last-child {
+  border-bottom: none;
+}
+.feature-icon[data-v-e7b2a66e] {
+  margin-right: 16px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.feature-info[data-v-e7b2a66e] {
+  flex: 1;
+}
+.feature-title[data-v-e7b2a66e] {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+.feature-desc[data-v-e7b2a66e] {
+  font-size: 12px;
+  color: #999;
+  display: block;
+}
+.contact-list[data-v-e7b2a66e] {
+  margin-top: 8px;
+}
+.contact-item[data-v-e7b2a66e] {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.contact-item[data-v-e7b2a66e]:last-child {
+  border-bottom: none;
+}
+.contact-item[data-v-e7b2a66e]:active {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 0 -12px;
+  padding: 16px 12px;
+}
+.contact-icon[data-v-e7b2a66e] {
+  margin-right: 16px;
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.contact-info[data-v-e7b2a66e] {
+  flex: 1;
+}
+.contact-title[data-v-e7b2a66e] {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+.contact-desc[data-v-e7b2a66e] {
+  font-size: 12px;
+  color: #999;
+  display: block;
+}
+.copyright[data-v-e7b2a66e] {
+  text-align: center;
+  padding: 24px 0;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 24px;
+}
+.copyright-text[data-v-e7b2a66e] {
+  font-size: 12px;
+  color: #999;
+  display: block;
+  margin-bottom: 8px;
+}
+.copyright-desc[data-v-e7b2a66e] {
+  font-size: 11px;
+  color: #ccc;
+  display: block;
+}
+
+/* 动画效果 */
+.about-card[data-v-e7b2a66e] {
+  animation: slideUp-e7b2a66e 0.3s ease-out;
+}
+@keyframes slideUp-e7b2a66e {
+from {
+    opacity: 0;
+    transform: translateY(20px);
+}
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+}

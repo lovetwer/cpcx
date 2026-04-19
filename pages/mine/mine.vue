@@ -1,163 +1,154 @@
 <template>
     <view class="container">
+        <!-- 个人信息卡片 -->
         <view class="profile-card">
-            <view class="card-header">
-                <view class="header-content">
-                    <view>
-                        <text class="title">个人信息</text>
-                        <text class="subtitle">更新您的个人资料</text>
-                    </view>
-                    <u-icon 
-                        name="setting" 
-                        color="#828282" 
-                        size="28" 
-                        @click="goToSettings"
-                        class="settings-icon"
-                    ></u-icon>
+            <view class="avatar-section">
+                <view class="avatar">
+                    <text class="avatar-text">{{ avatarText }}</text>
+                </view>
+                <view class="user-info">
+                    <text class="user-name">{{ user.userName || '用户' }}</text>
+                    <text class="user-email">{{ user.email || '未设置邮箱' }}</text>
                 </view>
             </view>
-            
-            <view class="form-content">
-                <view class="input-group">
-                    <view class="input-label">用户名</view>
-                    <u-input 
-                        v-model="user.userName"
-                        prefixIcon="account"
-                        :customStyle="inputStyle"
-                        :placeholderStyle="placeholderStyle"
-                        border="none"
-                    ></u-input>
-                </view>
-                
-                <view class="input-group">
-                    <view class="input-label">邮箱</view>
-                    <view class="email-input-wrapper">
-                        <u-input 
-                            v-model="user.email"
-                            placeholder="请填写邮箱"
-                            prefixIcon="email"
-                            :customStyle="{...inputStyle, flex: 1}"
-                            :placeholderStyle="placeholderStyle"
-                            border="none"
-                        ></u-input>
-                        <u-button 
-                            type="primary" 
-                            size="small"
-                            :customStyle="testEmailButtonStyle"
-                            :loading="testingEmail"
-                            @click="testSendEmail"
-                        >
-                            测试
-                        </u-button>
-                    </view>
-                </view>
-                
-                <view class="input-group">
-                    <view class="input-label">密码</view>
-                    <u-input 
-                        v-model="user.password"
-                        type="password"
-                        placeholder="请输入新密码"
-                        prefixIcon="lock"
-                        :customStyle="inputStyle"
-                        :placeholderStyle="placeholderStyle"
-                        border="none"
-                    ></u-input>
-                </view>
-                
-                <view class="button-group">
+        </view>
+        
+        <!-- 通知设置卡片 -->
+        <view class="email-card">
+            <view class="card-header">
+                <text class="title">通知设置</text>
+            </view>
+            <view class="email-form">
+                <u-input 
+                    v-model="user.email"
+                    placeholder="请输入邮箱地址"
+                    prefixIcon="email"
+                    :customStyle="inputStyle"
+                    border="none"
+                ></u-input>
+                <view class="email-buttons">
                     <u-button 
-                        type="primary" 
-                        :customStyle="saveButtonStyle"
-                        @click="update"
+                        size="small"
+                        :customStyle="testButtonStyle"
+                        :loading="testingEmail"
+                        @click="testSendEmail"
                     >
-                        保存修改
+                        测试
+                    </u-button>
+                    <u-button 
+                        size="small"
+                        :customStyle="saveButtonStyle"
+                        :loading="savingEmail"
+                        @click="saveEmail"
+                    >
+                        保存
                     </u-button>
                 </view>
             </view>
         </view>
         
-
+        <!-- 功能卡片 -->
+        <view class="feature-card">
+            <view class="card-header">
+                <text class="title">更多功能</text>
+            </view>
+            
+            <view class="feature-grid">
+                <view class="feature-item" @click="goToPage('/pages/password/password')">
+                    <view class="feature-icon">
+                        <u-icon name="lock" color="#FF3030" size="24"></u-icon>
+                    </view>
+                    <text class="feature-name">修改密码</text>
+                </view>
+                
+                <view class="feature-item" @click="goToPage('/pages/bonus/bonus')">
+                    <view class="feature-icon">
+                        <u-icon name="rmb-circle" color="#f5576c" size="24"></u-icon>
+                    </view>
+                    <text class="feature-name">奖金计算</text>
+                </view>
+                
+                <view class="feature-item" @click="goToPage('/pages/drawquery/drawquery')">
+                    <view class="feature-icon">
+                        <u-icon name="search" color="#4facfe" size="24"></u-icon>
+                    </view>
+                    <text class="feature-name">开奖查询</text>
+                </view>
+                
+                <view class="feature-item" @click="goToPage('/pages/verify/verify')">
+                    <view class="feature-icon">
+                        <u-icon name="checkmark-circle" color="#52c41a" size="24"></u-icon>
+                    </view>
+                    <text class="feature-name">手动验奖</text>
+                </view>
+                
+                <view class="feature-item" @click="goToPage('/pages/settings/settings')">
+                    <view class="feature-icon">
+                        <u-icon name="setting" color="#666" size="24"></u-icon>
+                    </view>
+                    <text class="feature-name">设置</text>
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
 <script setup>
-    import { reactive, ref } from 'vue'
-    import { updateUserInfo, getUserInfo, testSendEmail as sendTestEmail } from '@/http/api.js'
+    import { ref, computed } from 'vue'
+    import { getUserInfo, updateUserInfo, testSendEmail as sendTestEmail } from '@/http/api.js'
     import { onLoad } from '@dcloudio/uni-app'
-    import {
-        primaryButtonStyle,
-        logoutButtonStyle,
-        saveButtonStyle 
-    } from '@/utils/button-styles.js'
-    import CustomModal from '@/components/custom-modal/CustomModal.vue';
+    
     const user = ref({
         id: null,
         userName: uni.getStorageSync('userName'),
-        email: null,
-        password: null,
-        phone: null,
-        deviceId: null,
-        status: '0'
+        email: null
     })
     
-
+    const avatarText = computed(() => {
+        const name = user.value.userName || '用'
+        return name.charAt(0).toUpperCase()
+    })
     
-    // 样式配置
     const inputStyle = {
         background: '#f8f9fa',
-        borderRadius: '12px',
-        padding: '16px 20px',
-        height: '48px',
-        marginTop: '8px'
-    }
-    
-    const placeholderStyle = {
-        color: '#999'
-    }
-    
-    const userSettingsButtonStyle = {
-        ...primaryButtonStyle,
-        width: '70px',
-        height: '36px',
-        fontSize: '14px',
-        marginTop: '0',
-        marginRight: '0'
-    }
-
-    const testEmailButtonStyle = {
-        width: '70px',
+        borderRadius: '10px',
+        padding: '12px 14px',
         height: '40px',
-        fontSize: '14px',
-        marginLeft: '12px',
-        marginTop: '8px',
-        background: '#ffffff',
+        fontSize: '14px'
+    }
+    
+    const testButtonStyle = {
+        width: '60px',
+        height: '32px',
+        fontSize: '13px',
+        background: '#fff',
         color: '#fa8c16',
-        borderRadius: '8px',
+        borderRadius: '6px',
         border: '1px solid #fa8c16'
     }
-
-    const testingEmail = ref(false)
     
-
+    const saveButtonStyle = {
+        width: '60px',
+        height: '32px',
+        fontSize: '13px',
+        background: 'linear-gradient(135deg, #ffd59a 0%, #ffbb7a 100%)',
+        color: '#fff',
+        borderRadius: '6px',
+        border: 'none'
+    }
+    
+    const testingEmail = ref(false)
+    const savingEmail = ref(false)
     
     const testSendEmail = async () => {
         if (!user.value.email || user.value.email.trim() === '') {
-            uni.showToast({
-                title: '请先填写邮箱',
-                icon: 'none',
-                duration: 2000
-            })
+            uni.showToast({ title: '请先填写邮箱', icon: 'none' })
             return
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(user.value.email)) {
-            uni.showToast({
-                title: '请输入有效的邮箱地址',
-                icon: 'none',
-                duration: 2000
-            })
+            uni.showToast({ title: '请输入有效的邮箱地址', icon: 'none' })
             return
         }
 
@@ -169,192 +160,70 @@
             uni.hideLoading()
 
             if (res.code === 200) {
-                uni.showToast({
-                    title: res.message || '邮件发送成功',
-                    icon: 'success',
-                    duration: 2000
-                })
+                uni.showToast({ title: res.message || '邮件发送成功', icon: 'success' })
             } else {
-                uni.showToast({
-                    title: res.message || '邮件发送失败',
-                    icon: 'none',
-                    duration: 2000
-                })
+                uni.showToast({ title: res.message || '邮件发送失败', icon: 'none' })
             }
         } catch (err) {
             uni.hideLoading()
             console.error('测试邮件发送失败:', err)
-            uni.showToast({
-                title: '发送失败，请检查网络',
-                icon: 'none',
-                duration: 2000
-            })
+            uni.showToast({ title: '发送失败，请检查网络', icon: 'none' })
         } finally {
             testingEmail.value = false
         }
     }
-
-    const goToSettings = () => {
-        // 检测当前运行环境
-        // #ifdef H5
-        // 浏览器环境，显示下载APP提醒
-        uni.showModal({
-            title: '下载APP体验更多功能',
-            content: '为了获得更好的体验和完整功能，建议您下载我们的APP。',
-            confirmText: '立即下载',
-            cancelText: '稍后再说',
-            success: (res) => {
-                if (res.confirm) {
-                    // 跳转到下载链接
-                    window.open('https://jyqwwftobbtmiccsccjd.supabase.co/storage/v1/object/public/apk/cpcxapp.apk', '_blank')
-                }
-            }
-        })
-        // #endif
-        
-        // #ifndef H5
-        // 非浏览器环境，正常跳转到设置页面
-        uni.navigateTo({
-            url: '/pages/settings/settings'
-        })
-        // #endif
-    }
     
-    const update = () => {
-        const originalUserName = uni.getStorageSync('userName')
-        const originalEmail = uni.getStorageSync('email')
-        
-        // 检查是否有实际修改
-        if (user.value.userName === originalUserName && 
-            user.value.email === originalEmail && 
-            !user.value.password) {
-            uni.showToast({
-                title: '请修改信息后再保存',
-                icon: 'none',
-                duration: 2000
-            })
-            return
-        }
-        
-        // 验证用户名
-        if (!user.value.userName || user.value.userName.trim() === '') {
-            uni.showToast({
-                title: '用户名不能为空',
-                icon: 'error',
-                duration: 2000
-            })
-            return
-        }
-        
-        // 验证邮箱
+    const saveEmail = async () => {
         if (!user.value.email || user.value.email.trim() === '') {
-            uni.showToast({
-                title: '邮箱不能为空',
-                icon: 'error',
-                duration: 2000
-            })
+            uni.showToast({ title: '请输入邮箱地址', icon: 'none' })
             return
         }
-        
-        // 验证邮箱格式
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(user.value.email)) {
-            uni.showToast({
-                title: '请输入有效的邮箱地址',
-                icon: 'error',
-                duration: 2000
-            })
+            uni.showToast({ title: '请输入有效的邮箱地址', icon: 'none' })
             return
         }
-        
-        // 验证用户名是否重复（如果修改了用户名）
-        if (user.value.userName !== originalUserName) {
-            // 这里可以添加检查用户名是否已存在的逻辑
-        }
-        
-        const updateData = {
-            id: Number(user.value.id),
-            userName: user.value.userName,
-            email: user.value.email
-        }
-        
-        // 如果有新密码才包含密码字段
-        if (user.value.password && user.value.password.trim() !== '') {
-            if (user.value.password.length < 6) {
-                uni.showToast({
-                    title: '密码长度至少6位',
-                    icon: 'error',
-                    duration: 2000
-                })
-                return
+
+        savingEmail.value = true
+        uni.showLoading({ title: '保存中...' })
+
+        try {
+            const updateData = {
+                id: Number(user.value.id),
+                userName: user.value.userName,
+                email: user.value.email
             }
-            updateData.password = user.value.password
-        }
-        
-        uni.showLoading({
-            title: '保存中...'
-        })
-        
-        updateUserInfo(user.value.userName, updateData).then(res => {
+            
+            const res = await updateUserInfo(user.value.userName, updateData)
             uni.hideLoading()
+
             if (res.code === 200 || res.code === 20000) {
-                uni.showToast({
-                    title: res.message || '修改成功',
-                    icon: 'success',
-                    duration: 2000
-                })
-                user.value = res.data
-                uni.setStorageSync('userName', res.data.userName)
-                uni.setStorageSync('email', res.data.email)
-
-                // 清空密码输入框
-                user.value.password = null
-
-                // 延迟刷新页面数据
-                setTimeout(() => {
-                    getUserInfo(res.data.userName).then(refreshRes => {
-                        if (refreshRes.code === 200 && refreshRes.data && refreshRes.data.user) {
-                            user.value = {
-                                ...user.value,
-                                ...refreshRes.data.user
-                            }
-                        } else if (refreshRes.code === 20000 && refreshRes.data) {
-                            user.value = {
-                                ...user.value,
-                                ...refreshRes.data
-                            }
-                        }
-                    }).catch(err => {
-                        console.error('刷新用户信息失败:', err)
-                    })
-                }, 1000)
-
-                return
+                uni.showToast({ title: '保存成功', icon: 'success' })
+                uni.setStorageSync('email', user.value.email)
+            } else {
+                uni.showToast({ title: res.message || '保存失败', icon: 'none' })
             }
-            uni.showToast({
-                title: res.message || '修改失败',
-                icon: 'error',
-                duration: 2000
-            })
-        }).catch(err => {
+        } catch (err) {
             uni.hideLoading()
-            console.error('更新用户信息失败:', err)
-            uni.showToast({
-                title: '网络错误，请重试',
-                icon: 'error',
-                duration: 2000
-            })
-        })
+            console.error('保存邮箱失败:', err)
+            uni.showToast({ title: '网络错误，请重试', icon: 'none' })
+        } finally {
+            savingEmail.value = false
+        }
+    }
+    
+    const goToPage = (url) => {
+        uni.navigateTo({ url })
     }
     
     onLoad(() => {
         getUserInfo(user.value.userName).then(res => {
             if (res.code === 200 && res.data && res.data.user) {
-                user.value = {
-                    ...user.value,
-                    ...res.data.user
-                }
-            } 
+                user.value = { ...user.value, ...res.data.user }
+            } else if (res.code === 20000 && res.data) {
+                user.value = { ...user.value, ...res.data }
+            }
         }).catch(err => {
             console.error('获取用户信息失败:', err)
         })
@@ -368,82 +237,139 @@
         padding: 20px;
     }
 
-
-
-    .settings-icon {
-        margin: 0 !important;
-        flex-shrink: 0;
-        padding: 8px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-    }
-    
-    .settings-icon:hover {
-        transform: rotate(90deg);
-    }
-
     .profile-card {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    .avatar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 0;
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+    }
+
+    .avatar-text {
+        font-size: 32px;
+        font-weight: 600;
+        color: #666;
+    }
+
+    .user-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .user-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 6px;
+    }
+
+    .user-email {
+        font-size: 14px;
+        color: #999;
+    }
+
+    .email-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px 20px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        margin-top: 16px;
+    }
+
+    .email-card .card-header {
+        margin-bottom: 12px;
+    }
+
+    .email-card .title {
+        font-size: 16px;
+    }
+
+    .email-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .email-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .feature-card {
         background: #fff;
         border-radius: 20px;
-        padding: 30px;
+        padding: 20px 24px;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-        flex: 1;
+        margin-top: 16px;
     }
 
     .card-header {
-        margin-bottom: 30px;
-    }
-    
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        margin-bottom: 16px;
     }
 
     .title {
-        font-size: 24px;
+        font-size: 18px;
         font-weight: 600;
         color: #333;
-        display: block;
-        margin-bottom: 8px;
     }
 
-    .subtitle {
-        font-size: 14px;
-        color: #666;
-        display: block;
+    .feature-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
     }
 
-    .form-content {
-        width: 100%;
+    .feature-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: calc(20% - 13px);
+        padding: 16px 4px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        transition: all 0.2s ease;
     }
 
-    .input-group {
-        margin-bottom: 20px;
+    .feature-item:active {
+        opacity: 0.7;
+        background: #f0f0f0;
     }
 
-    .email-input-wrapper {
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #fff;
         display: flex;
         align-items: center;
-    }
-
-    .input-label {
-        font-size: 14px;
-        color: #333;
-        font-weight: 500;
+        justify-content: center;
         margin-bottom: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
-    .button-group {
-        margin-top: 20px;
-    }
-
-
-
-    /* 动画效果 */
-    .profile-card {
-        animation: slideUp 0.3s ease-out;
+    .feature-name {
+        font-size: 13px;
+        color: #333;
+        text-align: center;
     }
 
     @keyframes slideUp {
@@ -456,15 +382,4 @@
             transform: translateY(0);
         }
     }
-
-    /* 按钮点击效果 */
-    .up-button {
-        transition: all 0.3s ease;
-    }
-
-    .up-button:active {
-        transform: scale(0.98);
-    }
-
-
 </style>

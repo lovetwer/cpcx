@@ -25,24 +25,34 @@
 			"navigationBarTitleText": "彩票详情"
 		}
 	}, {
+		"path": "pages/password/password",
+		"style": {
+			"navigationBarTitleText": "修改密码"
+		}
+	}, {
+		"path": "pages/bonus/bonus",
+		"style": {
+			"navigationBarTitleText": "奖金计算"
+		}
+	}, {
+		"path": "pages/drawquery/drawquery",
+		"style": {
+			"navigationBarTitleText": "开奖查询"
+		}
+	}, {
+		"path": "pages/verify/verify",
+		"style": {
+			"navigationBarTitleText": "手动验奖"
+		}
+	}, {
+		"path": "pages/help/help",
+		"style": {
+			"navigationBarTitleText": "使用帮助"
+		}
+	}, {
 		"path": "pages/settings/settings",
 		"style": {
 			"navigationBarTitleText": "设置"
-		}
-	}, {
-		"path": "pages/settings/push-settings",
-		"style": {
-			"navigationBarTitleText": "推送设置"
-		}
-	}, {
-		"path": "pages/settings/account-settings",
-		"style": {
-			"navigationBarTitleText": "账户设置"
-		}
-	}, {
-		"path": "pages/settings/about",
-		"style": {
-			"navigationBarTitleText": "关于应用"
 		}
 	}],
 	"globalStyle": {

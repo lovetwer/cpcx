@@ -497,7 +497,7 @@ $green-won: #27ae60;
   min-width: 360rpx; height: 84rpx; border-radius: 42rpx;
   font-size: 30rpx; font-weight: 600; border: none; letter-spacing: 2rpx;
   &.primary-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2); color: #fff;
+    background: linear-gradient(135deg, #FF3030, #FF6B6B); color: #fff;
     box-shadow: 0 8rpx 32rpx rgba(102,126,234,0.35);
     &:active { transform: scale(0.97); opacity: 0.9; }
   }
@@ -513,7 +513,7 @@ $green-won: #27ae60;
   display: flex; flex-direction: column; align-items: center;
   border: 1rpx solid $card-border; backdrop-filter: blur(8px);
 }
-.promo-icon-wrap { width: 72rpx; height: 72rpx; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; margin-bottom: 16rpx; }
+.promo-icon-wrap { width: 72rpx; height: 72rpx; border-radius: 50%; background: linear-gradient(135deg, #FF3030, #FF6B6B); display: flex; align-items: center; justify-content: center; margin-bottom: 16rpx; }
 .promo-icon { font-size: 34rpx; color: #fff; }
 .promo-title { font-size: 30rpx; font-weight: 700; color: $text-primary; margin-bottom: 8rpx; }
 .promo-desc { font-size: 24rpx; color: $text-secondary; margin-bottom: 24rpx; text-align: center; }
