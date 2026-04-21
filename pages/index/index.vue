@@ -443,7 +443,8 @@ const cpForm = ref({
   blueBall: '',
   openTime: '',
   type: 'ssq',
-  playMode: 'single'
+  playMode: 'normal',
+  betType: 'single'
 })
 
 // 球数据
@@ -462,7 +463,7 @@ const rest = () => {
   cpForm.value.blueBall = ''
   cpForm.value.openTime = timeFormat(new Date(), 'yyyy-mm-dd')
   cpForm.value.type = 'ssq'
-  cpForm.value.playMode = 'single'
+  cpForm.value.betType = 'single'
   playMode.value = 'single'
   redBallArr.value = ssqBallRed
   blueBallArr.value = ssqBallBlue
@@ -472,7 +473,13 @@ const rest = () => {
 // 切换玩法模式
 const changePlayMode = (mode) => {
   playMode.value = mode
-  cpForm.value.playMode = mode
+  // 映射 betType: single -> single, multiple -> complex, dantuo -> dantuo
+  const betTypeMap = {
+    'single': 'single',
+    'multiple': 'complex',
+    'dantuo': 'dantuo'
+  }
+  cpForm.value.betType = betTypeMap[mode] || 'single'
   // 清空所有选择
   checkRedBoxValue.value = []
   checkBlueBoxValue.value = []
