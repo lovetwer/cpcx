@@ -646,8 +646,43 @@ const aiSelectNumbers = () => {
         let blueBallsArray = []
         let analysisText = ''
         
+        // 处理 aiResponse 字符串格式
+        if (res.data.aiResponse && typeof res.data.aiResponse === 'string') {
+          try {
+            // 提取 JSON 字符串（去掉 ```json 和 ```）
+            let jsonStr = res.data.aiResponse
+            if (jsonStr.includes('```json')) {
+              jsonStr = jsonStr.replace(/```json\n?/g, '').replace(/```\n?/g, '')
+            }
+            const aiData = JSON.parse(jsonStr)
+            if (aiData.recommendations && Array.isArray(aiData.recommendations) && aiData.recommendations.length > 0) {
+              const recommendation = aiData.recommendations[0]
+              // 处理 redBalls 可能是字符串 "03,05,06,22,25,33" 的情况
+              if (recommendation.redBalls) {
+                if (typeof recommendation.redBalls === 'string') {
+                  redBallsArray = recommendation.redBalls.split(',')
+                } else if (Array.isArray(recommendation.redBalls)) {
+                  redBallsArray = recommendation.redBalls
+                }
+              }
+              // 处理 blueBalls 可能是字符串 "08" 的情况
+              if (recommendation.blueBalls) {
+                if (typeof recommendation.blueBalls === 'string') {
+                  blueBallsArray = recommendation.blueBalls.split(',')
+                } else if (Array.isArray(recommendation.blueBalls)) {
+                  blueBallsArray = recommendation.blueBalls
+                }
+              }
+              if (recommendation.analysis) {
+                analysisText = recommendation.analysis
+              }
+            }
+          } catch (e) {
+            console.error('解析 aiResponse 失败:', e)
+          }
+        }
         // 新格式：data.recommendations[0].redBalls/blueBalls
-        if (res.data.recommendations && Array.isArray(res.data.recommendations) && res.data.recommendations.length > 0) {
+        else if (res.data.recommendations && Array.isArray(res.data.recommendations) && res.data.recommendations.length > 0) {
           const recommendation = res.data.recommendations[0]
           if (recommendation.redBalls && Array.isArray(recommendation.redBalls)) {
             redBallsArray = recommendation.redBalls
