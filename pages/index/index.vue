@@ -442,7 +442,8 @@ const cpForm = ref({
   redBall: '',
   blueBall: '',
   openTime: '',
-  type: 'ssq'
+  type: 'ssq',
+  playMode: 'single'
 })
 
 // 球数据
@@ -461,6 +462,8 @@ const rest = () => {
   cpForm.value.blueBall = ''
   cpForm.value.openTime = timeFormat(new Date(), 'yyyy-mm-dd')
   cpForm.value.type = 'ssq'
+  cpForm.value.playMode = 'single'
+  playMode.value = 'single'
   redBallArr.value = ssqBallRed
   blueBallArr.value = ssqBallBlue
   betCount.value = 1
@@ -469,6 +472,7 @@ const rest = () => {
 // 切换玩法模式
 const changePlayMode = (mode) => {
   playMode.value = mode
+  cpForm.value.playMode = mode
   // 清空所有选择
   checkRedBoxValue.value = []
   checkBlueBoxValue.value = []
