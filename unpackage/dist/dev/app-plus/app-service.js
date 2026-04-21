@@ -11379,16 +11379,17 @@ ${shareSummary}
         background: "#fff",
         color: "#fa8c16",
         borderRadius: "6px",
-        border: "1px solid #fa8c16"
+        border: "none"
       };
       const saveButtonStyle2 = {
         width: "60px",
         height: "32px",
         fontSize: "13px",
-        background: "linear-gradient(135deg, #ffd59a 0%, #ffbb7a 100%)",
+        background: "linear-gradient(135deg, #FF3030 0%, #FF6B6B 100%)",
         color: "#fff",
         borderRadius: "6px",
-        border: "none"
+        border: "none",
+        margin: "0"
       };
       const testingEmail = vue.ref(false);
       const savingEmail = vue.ref(false);
@@ -11414,7 +11415,7 @@ ${shareSummary}
           }
         } catch (err) {
           uni.hideLoading();
-          formatAppLog("error", "at pages/mine/mine.vue:169", "测试邮件发送失败:", err);
+          formatAppLog("error", "at pages/mine/mine.vue:168", "测试邮件发送失败:", err);
           uni.showToast({ title: "发送失败，请检查网络", icon: "none" });
         } finally {
           testingEmail.value = false;
@@ -11448,7 +11449,7 @@ ${shareSummary}
           }
         } catch (err) {
           uni.hideLoading();
-          formatAppLog("error", "at pages/mine/mine.vue:209", "保存邮箱失败:", err);
+          formatAppLog("error", "at pages/mine/mine.vue:208", "保存邮箱失败:", err);
           uni.showToast({ title: "网络错误，请重试", icon: "none" });
         } finally {
           savingEmail.value = false;
@@ -11465,7 +11466,7 @@ ${shareSummary}
             user.value = { ...user.value, ...res.data };
           }
         }).catch((err) => {
-          formatAppLog("error", "at pages/mine/mine.vue:228", "获取用户信息失败:", err);
+          formatAppLog("error", "at pages/mine/mine.vue:227", "获取用户信息失败:", err);
         });
       });
       const __returned__ = { user, avatarText, inputStyle, testButtonStyle, saveButtonStyle: saveButtonStyle2, testingEmail, savingEmail, testSendEmail: testSendEmail$1, saveEmail, goToPage, ref: vue.ref, computed: vue.computed, get getUserInfo() {
@@ -11482,8 +11483,8 @@ ${shareSummary}
     }
   };
   function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_u_input = resolveEasycom(vue.resolveDynamicComponent("u-input"), __easycom_0);
     const _component_u_button = resolveEasycom(vue.resolveDynamicComponent("u-button"), __easycom_1$2);
+    const _component_u_input = resolveEasycom(vue.resolveDynamicComponent("u-input"), __easycom_0);
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$2);
     return vue.openBlock(), vue.createElementBlock("view", { class: "container" }, [
       vue.createElementVNode("view", { class: "profile-card" }, [
@@ -11517,7 +11518,19 @@ ${shareSummary}
       ]),
       vue.createElementVNode("view", { class: "email-card" }, [
         vue.createElementVNode("view", { class: "card-header" }, [
-          vue.createElementVNode("text", { class: "title" }, "通知设置")
+          vue.createElementVNode("text", { class: "title" }, "通知设置"),
+          vue.createVNode(_component_u_button, {
+            size: "small",
+            customStyle: $setup.saveButtonStyle,
+            loading: $setup.savingEmail,
+            onClick: $setup.saveEmail
+          }, {
+            default: vue.withCtx(() => [
+              vue.createTextVNode(" 保存 ")
+            ]),
+            _: 1
+            /* STABLE */
+          }, 8, ["loading"])
         ]),
         vue.createElementVNode("view", { class: "email-form" }, [
           vue.createVNode(_component_u_input, {
@@ -11528,32 +11541,18 @@ ${shareSummary}
             customStyle: $setup.inputStyle,
             border: "none"
           }, null, 8, ["modelValue"]),
-          vue.createElementVNode("view", { class: "email-buttons" }, [
-            vue.createVNode(_component_u_button, {
-              size: "small",
-              customStyle: $setup.testButtonStyle,
-              loading: $setup.testingEmail,
-              onClick: $setup.testSendEmail
-            }, {
-              default: vue.withCtx(() => [
-                vue.createTextVNode(" 测试 ")
-              ]),
-              _: 1
-              /* STABLE */
-            }, 8, ["loading"]),
-            vue.createVNode(_component_u_button, {
-              size: "small",
-              customStyle: $setup.saveButtonStyle,
-              loading: $setup.savingEmail,
-              onClick: $setup.saveEmail
-            }, {
-              default: vue.withCtx(() => [
-                vue.createTextVNode(" 保存 ")
-              ]),
-              _: 1
-              /* STABLE */
-            }, 8, ["loading"])
-          ])
+          vue.createVNode(_component_u_button, {
+            size: "small",
+            customStyle: $setup.testButtonStyle,
+            loading: $setup.testingEmail,
+            onClick: $setup.testSendEmail
+          }, {
+            default: vue.withCtx(() => [
+              vue.createTextVNode(" 测试 ")
+            ]),
+            _: 1
+            /* STABLE */
+          }, 8, ["loading"])
         ])
       ]),
       vue.createElementVNode("view", { class: "feature-card" }, [

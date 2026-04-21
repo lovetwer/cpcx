@@ -17,6 +17,14 @@
         <view class="email-card">
             <view class="card-header">
                 <text class="title">通知设置</text>
+                <u-button 
+                    size="small"
+                    :customStyle="saveButtonStyle"
+                    :loading="savingEmail"
+                    @click="saveEmail"
+                >
+                    保存
+                </u-button>
             </view>
             <view class="email-form">
                 <u-input 
@@ -26,24 +34,14 @@
                     :customStyle="inputStyle"
                     border="none"
                 ></u-input>
-                <view class="email-buttons">
-                    <u-button 
-                        size="small"
-                        :customStyle="testButtonStyle"
-                        :loading="testingEmail"
-                        @click="testSendEmail"
-                    >
-                        测试
-                    </u-button>
-                    <u-button 
-                        size="small"
-                        :customStyle="saveButtonStyle"
-                        :loading="savingEmail"
-                        @click="saveEmail"
-                    >
-                        保存
-                    </u-button>
-                </view>
+                <u-button 
+                    size="small"
+                    :customStyle="testButtonStyle"
+                    :loading="testingEmail"
+                    @click="testSendEmail"
+                >
+                    测试
+                </u-button>
             </view>
         </view>
         
@@ -124,17 +122,18 @@
         background: '#fff',
         color: '#fa8c16',
         borderRadius: '6px',
-        border: '1px solid #fa8c16'
+        border: 'none'
     }
     
     const saveButtonStyle = {
         width: '60px',
         height: '32px',
         fontSize: '13px',
-        background: 'linear-gradient(135deg, #ffd59a 0%, #ffbb7a 100%)',
+        background: 'linear-gradient(135deg, #FF3030 0%, #FF6B6B 100%)',
         color: '#fff',
         borderRadius: '6px',
-        border: 'none'
+        border: 'none',
+        margin: '0'
     }
     
     const testingEmail = ref(false)
@@ -295,22 +294,29 @@
 
     .email-card .card-header {
         margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .email-card .title {
         font-size: 16px;
     }
 
-    .email-form {
+    .header-actions {
         display: flex;
-        flex-direction: column;
-        gap: 12px;
+        align-items: center;
     }
 
-    .email-buttons {
+    .email-form {
         display: flex;
-        justify-content: flex-end;
+        flex-direction: row;
+        align-items: center;
         gap: 10px;
+    }
+
+    .email-form .u-input {
+        flex: 1;
     }
 
     .feature-card {
@@ -332,9 +338,8 @@
     }
 
     .feature-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
     }
 
     .feature-item {
@@ -342,34 +347,34 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: calc(20% - 13px);
-        padding: 16px 4px;
-        background: #f8f9fa;
-        border-radius: 12px;
+        padding: 16px 0;
+        background: transparent;
         transition: all 0.2s ease;
     }
 
     .feature-item:active {
         opacity: 0.7;
-        background: #f0f0f0;
     }
 
     .feature-icon {
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        background: #fff;
+        background: #f8f9fa;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-bottom: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     .feature-name {
-        font-size: 13px;
+        font-size: 12px;
         color: #333;
         text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
     }
 
     @keyframes slideUp {

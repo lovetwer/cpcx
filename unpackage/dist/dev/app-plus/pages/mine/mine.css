@@ -23,223 +23,6 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.u-empty[data-v-ac70166d],
-.u-empty__wrap[data-v-ac70166d],
-.u-tabs[data-v-ac70166d],
-.u-tabs__wrapper[data-v-ac70166d],
-.u-tabs__wrapper__scroll-view-wrapper[data-v-ac70166d],
-.u-tabs__wrapper__scroll-view[data-v-ac70166d],
-.u-tabs__wrapper__nav[data-v-ac70166d],
-.u-tabs__wrapper__nav__line[data-v-ac70166d],
-.up-empty[data-v-ac70166d],
-.up-empty__wrap[data-v-ac70166d],
-.up-tabs[data-v-ac70166d],
-.up-tabs__wrapper[data-v-ac70166d],
-.up-tabs__wrapper__scroll-view-wrapper[data-v-ac70166d],
-.up-tabs__wrapper__scroll-view[data-v-ac70166d],
-.up-tabs__wrapper__nav[data-v-ac70166d],
-.up-tabs__wrapper__nav__line[data-v-ac70166d] {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  flex-grow: 0;
-  flex-basis: auto;
-  align-items: stretch;
-  align-content: flex-start;
-}
-@font-face {
-  font-family: "uicon-iconfont";
-  src: url("https://at.alicdn.com/t/font_2225171_8kdcwk4po24.ttf") format("truetype");
-}
-.u-icon[data-v-ac70166d] {
-  display: flex;
-  align-items: center;
-}
-.u-icon--left[data-v-ac70166d] {
-  flex-direction: row-reverse;
-  align-items: center;
-}
-.u-icon--right[data-v-ac70166d] {
-  flex-direction: row;
-  align-items: center;
-}
-.u-icon--top[data-v-ac70166d] {
-  flex-direction: column-reverse;
-  justify-content: center;
-}
-.u-icon--bottom[data-v-ac70166d] {
-  flex-direction: column;
-  justify-content: center;
-}
-.u-icon__icon[data-v-ac70166d] {
-  font-family: uicon-iconfont;
-  position: relative;
-
-  display: flex;
-
-  flex-direction: row;
-  align-items: center;
-}
-.u-icon__icon--primary[data-v-ac70166d] {
-  color: #3c9cff;
-}
-.u-icon__icon--success[data-v-ac70166d] {
-  color: #5ac725;
-}
-.u-icon__icon--error[data-v-ac70166d] {
-  color: #f56c6c;
-}
-.u-icon__icon--warning[data-v-ac70166d] {
-  color: #f9ae3d;
-}
-.u-icon__icon--info[data-v-ac70166d] {
-  color: #909399;
-}
-.u-icon__img[data-v-ac70166d] {
-  height: auto;
-  will-change: transform;
-}
-.u-icon__label[data-v-ac70166d] {
-  line-height: 1;
-}
-/**
- * 这里是uni-app内置的常用样式变量
- *
- * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
- * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
- *
- */
-/**
- * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
- *
- * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
- */
-/* 颜色变量 */
-/* 行为相关颜色 */
-/* 文字基本颜色 */
-/* 背景颜色 */
-/* 边框颜色 */
-/* 尺寸变量 */
-/* 文字尺寸 */
-/* 图片尺寸 */
-/* Border Radius */
-/* 水平间距 */
-/* 垂直间距 */
-/* 透明度 */
-/* 文章场景相关 */
-.u-empty[data-v-df79975b],
-.u-empty__wrap[data-v-df79975b],
-.u-tabs[data-v-df79975b],
-.u-tabs__wrapper[data-v-df79975b],
-.u-tabs__wrapper__scroll-view-wrapper[data-v-df79975b],
-.u-tabs__wrapper__scroll-view[data-v-df79975b],
-.u-tabs__wrapper__nav[data-v-df79975b],
-.u-tabs__wrapper__nav__line[data-v-df79975b],
-.up-empty[data-v-df79975b],
-.up-empty__wrap[data-v-df79975b],
-.up-tabs[data-v-df79975b],
-.up-tabs__wrapper[data-v-df79975b],
-.up-tabs__wrapper__scroll-view-wrapper[data-v-df79975b],
-.up-tabs__wrapper__scroll-view[data-v-df79975b],
-.up-tabs__wrapper__nav[data-v-df79975b],
-.up-tabs__wrapper__nav__line[data-v-df79975b] {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  flex-grow: 0;
-  flex-basis: auto;
-  align-items: stretch;
-  align-content: flex-start;
-}
-.u-input[data-v-df79975b] {
-
-  display: flex;
-
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
-}
-.u-input--radius[data-v-df79975b], .u-input--square[data-v-df79975b] {
-  border-radius: 4px;
-}
-.u-input--no-radius[data-v-df79975b] {
-  border-radius: 0;
-}
-.u-input--circle[data-v-df79975b] {
-  border-radius: 100px;
-}
-.u-input__content[data-v-df79975b] {
-  flex: 1;
-
-  display: flex;
-
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-.u-input__content__field-wrapper[data-v-df79975b] {
-  position: relative;
-
-  display: flex;
-
-  flex-direction: row;
-  margin: 0;
-  flex: 1;
-}
-.u-input__content__field-wrapper__field[data-v-df79975b] {
-  line-height: 26px;
-  text-align: left;
-  color: #303133;
-  height: 24px;
-  font-size: 15px;
-  flex: 1;
-}
-.u-input__content__clear[data-v-df79975b] {
-  width: 20px;
-  height: 20px;
-  border-radius: 100px;
-  background-color: #c6c7cb;
-
-  display: flex;
-
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  transform: scale(0.82);
-  margin-left: 4px;
-}
-.u-input__content__subfix-icon[data-v-df79975b] {
-  margin-left: 4px;
-}
-.u-input__content__prefix-icon[data-v-df79975b] {
-  margin-right: 4px;
-}
-/**
- * 这里是uni-app内置的常用样式变量
- *
- * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
- * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
- *
- */
-/**
- * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
- *
- * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
- */
-/* 颜色变量 */
-/* 行为相关颜色 */
-/* 文字基本颜色 */
-/* 背景颜色 */
-/* 边框颜色 */
-/* 尺寸变量 */
-/* 文字尺寸 */
-/* 图片尺寸 */
-/* Border Radius */
-/* 水平间距 */
-/* 垂直间距 */
-/* 透明度 */
-/* 文章场景相关 */
 .u-empty[data-v-2af81691],
 .u-empty__wrap[data-v-2af81691],
 .u-tabs[data-v-2af81691],
@@ -395,6 +178,110 @@
 to {
     transform: rotate(1turn);
 }
+}
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.u-empty[data-v-ac70166d],
+.u-empty__wrap[data-v-ac70166d],
+.u-tabs[data-v-ac70166d],
+.u-tabs__wrapper[data-v-ac70166d],
+.u-tabs__wrapper__scroll-view-wrapper[data-v-ac70166d],
+.u-tabs__wrapper__scroll-view[data-v-ac70166d],
+.u-tabs__wrapper__nav[data-v-ac70166d],
+.u-tabs__wrapper__nav__line[data-v-ac70166d],
+.up-empty[data-v-ac70166d],
+.up-empty__wrap[data-v-ac70166d],
+.up-tabs[data-v-ac70166d],
+.up-tabs__wrapper[data-v-ac70166d],
+.up-tabs__wrapper__scroll-view-wrapper[data-v-ac70166d],
+.up-tabs__wrapper__scroll-view[data-v-ac70166d],
+.up-tabs__wrapper__nav[data-v-ac70166d],
+.up-tabs__wrapper__nav__line[data-v-ac70166d] {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  align-items: stretch;
+  align-content: flex-start;
+}
+@font-face {
+  font-family: "uicon-iconfont";
+  src: url("https://at.alicdn.com/t/font_2225171_8kdcwk4po24.ttf") format("truetype");
+}
+.u-icon[data-v-ac70166d] {
+  display: flex;
+  align-items: center;
+}
+.u-icon--left[data-v-ac70166d] {
+  flex-direction: row-reverse;
+  align-items: center;
+}
+.u-icon--right[data-v-ac70166d] {
+  flex-direction: row;
+  align-items: center;
+}
+.u-icon--top[data-v-ac70166d] {
+  flex-direction: column-reverse;
+  justify-content: center;
+}
+.u-icon--bottom[data-v-ac70166d] {
+  flex-direction: column;
+  justify-content: center;
+}
+.u-icon__icon[data-v-ac70166d] {
+  font-family: uicon-iconfont;
+  position: relative;
+
+  display: flex;
+
+  flex-direction: row;
+  align-items: center;
+}
+.u-icon__icon--primary[data-v-ac70166d] {
+  color: #3c9cff;
+}
+.u-icon__icon--success[data-v-ac70166d] {
+  color: #5ac725;
+}
+.u-icon__icon--error[data-v-ac70166d] {
+  color: #f56c6c;
+}
+.u-icon__icon--warning[data-v-ac70166d] {
+  color: #f9ae3d;
+}
+.u-icon__icon--info[data-v-ac70166d] {
+  color: #909399;
+}
+.u-icon__img[data-v-ac70166d] {
+  height: auto;
+  will-change: transform;
+}
+.u-icon__label[data-v-ac70166d] {
+  line-height: 1;
 }
 /**
  * 这里是uni-app内置的常用样式变量
@@ -596,6 +483,119 @@ to {
 .u-button--hairline[data-v-5ce41ee6] {
   border-width: 0.5px !important;
 }
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.u-empty[data-v-df79975b],
+.u-empty__wrap[data-v-df79975b],
+.u-tabs[data-v-df79975b],
+.u-tabs__wrapper[data-v-df79975b],
+.u-tabs__wrapper__scroll-view-wrapper[data-v-df79975b],
+.u-tabs__wrapper__scroll-view[data-v-df79975b],
+.u-tabs__wrapper__nav[data-v-df79975b],
+.u-tabs__wrapper__nav__line[data-v-df79975b],
+.up-empty[data-v-df79975b],
+.up-empty__wrap[data-v-df79975b],
+.up-tabs[data-v-df79975b],
+.up-tabs__wrapper[data-v-df79975b],
+.up-tabs__wrapper__scroll-view-wrapper[data-v-df79975b],
+.up-tabs__wrapper__scroll-view[data-v-df79975b],
+.up-tabs__wrapper__nav[data-v-df79975b],
+.up-tabs__wrapper__nav__line[data-v-df79975b] {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  align-items: stretch;
+  align-content: flex-start;
+}
+.u-input[data-v-df79975b] {
+
+  display: flex;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+}
+.u-input--radius[data-v-df79975b], .u-input--square[data-v-df79975b] {
+  border-radius: 4px;
+}
+.u-input--no-radius[data-v-df79975b] {
+  border-radius: 0;
+}
+.u-input--circle[data-v-df79975b] {
+  border-radius: 100px;
+}
+.u-input__content[data-v-df79975b] {
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.u-input__content__field-wrapper[data-v-df79975b] {
+  position: relative;
+
+  display: flex;
+
+  flex-direction: row;
+  margin: 0;
+  flex: 1;
+}
+.u-input__content__field-wrapper__field[data-v-df79975b] {
+  line-height: 26px;
+  text-align: left;
+  color: #303133;
+  height: 24px;
+  font-size: 15px;
+  flex: 1;
+}
+.u-input__content__clear[data-v-df79975b] {
+  width: 20px;
+  height: 20px;
+  border-radius: 100px;
+  background-color: #c6c7cb;
+
+  display: flex;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.82);
+  margin-left: 4px;
+}
+.u-input__content__subfix-icon[data-v-df79975b] {
+  margin-left: 4px;
+}
+.u-input__content__prefix-icon[data-v-df79975b] {
+  margin-right: 4px;
+}
 
 .container[data-v-7c2ebfa5] {
         min-height: 100vh;
@@ -652,19 +652,25 @@ to {
 }
 .email-card .card-header[data-v-7c2ebfa5] {
         margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 }
 .email-card .title[data-v-7c2ebfa5] {
         font-size: 16px;
 }
+.header-actions[data-v-7c2ebfa5] {
+        display: flex;
+        align-items: center;
+}
 .email-form[data-v-7c2ebfa5] {
         display: flex;
-        flex-direction: column;
-        gap: 12px;
-}
-.email-buttons[data-v-7c2ebfa5] {
-        display: flex;
-        justify-content: flex-end;
+        flex-direction: row;
+        align-items: center;
         gap: 10px;
+}
+.email-form .u-input[data-v-7c2ebfa5] {
+        flex: 1;
 }
 .feature-card[data-v-7c2ebfa5] {
         background: #fff;
@@ -682,40 +688,39 @@ to {
         color: #333;
 }
 .feature-grid[data-v-7c2ebfa5] {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
 }
 .feature-item[data-v-7c2ebfa5] {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: calc(20% - 13px);
-        padding: 16px 4px;
-        background: #f8f9fa;
-        border-radius: 12px;
+        padding: 16px 0;
+        background: transparent;
         transition: all 0.2s ease;
 }
 .feature-item[data-v-7c2ebfa5]:active {
         opacity: 0.7;
-        background: #f0f0f0;
 }
 .feature-icon[data-v-7c2ebfa5] {
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        background: #fff;
+        background: #f8f9fa;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-bottom: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 .feature-name[data-v-7c2ebfa5] {
-        font-size: 13px;
+        font-size: 12px;
         color: #333;
         text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
 }
 @keyframes slideUp-7c2ebfa5 {
 from {
