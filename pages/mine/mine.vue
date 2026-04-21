@@ -86,6 +86,14 @@
                     </view>
                     <text class="feature-name">设置</text>
                 </view>
+                
+                <!-- H5环境下显示下载APP -->
+                <view class="feature-item" v-if="isH5" @click="downloadApp">
+                    <view class="feature-icon">
+                        <u-icon name="download" color="#1890ff" size="24"></u-icon>
+                    </view>
+                    <text class="feature-name">下载APP</text>
+                </view>
             </view>
         </view>
     </view>
@@ -216,7 +224,24 @@
         uni.navigateTo({ url })
     }
     
+    // 判断是否为H5环境
+    const isH5 = ref(false)
+    
+    // 下载APP
+    const downloadApp = () => {
+        const apkUrl = 'https://jyqwwftobbtmiccsccjd.supabase.co/storage/v1/object/public/apk/cpcxapp.apk'
+        // #ifdef H5
+        window.location.href = apkUrl
+        // #endif
+        // #ifndef H5
+        uni.showToast({ title: '请在浏览器中打开下载', icon: 'none' })
+        // #endif
+    }
+    
     onLoad(() => {
+        // #ifdef H5
+        isH5.value = true
+        // #endif
         getUserInfo(user.value.userName).then(res => {
             if (res.code === 200 && res.data && res.data.user) {
                 user.value = { ...user.value, ...res.data.user }
