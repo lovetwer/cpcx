@@ -1,6 +1,6 @@
 <template>
   <view class="lottery-container">
-    <!-- 顶部导航 - 移除playMode字段版本 -->
+    <!-- 顶部导航 -->
     <view class="nav-header">
       <u-subsection
         :list="list"
@@ -477,7 +477,7 @@ const betCount = ref(1)
 const list = reactive(['双色球', '大乐透'])
 const minDate = new Date().getTime()
 
-// 表单数据
+// 表单数据 - 提交给后端的参数
 const cpForm = ref({
   user: uni.getStorageSync('userName'),
   redBall: '',
