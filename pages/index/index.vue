@@ -195,24 +195,59 @@
           </view>
         </view>
 
-        <!-- 胆拖模式 - 蓝球选择区（普通选择，非胆拖） -->
+        <!-- 胆拖模式 - 蓝球胆码选择区 -->
         <view class="ball-section" v-if="playMode === 'dantuo'">
           <view class="section-header">
             <view class="title-wrapper">
-              <text class="section-title blue-title">蓝球</text>
-              <text class="ball-count">已选 {{ checkBlueBoxValue.length }} 个</text>
+              <text class="section-title blue-title">蓝球胆码</text>
+              <text class="ball-count">已选 {{ blueDanValue.length }} 个（必中）</text>
             </view>
           </view>
           <view class="ball-grid">
-            <u-checkbox-group placement="row" @change="blueBoxChangeDantuo" v-model="checkBlueBoxValue">
+            <u-checkbox-group placement="row" @change="blueDanChange" v-model="blueDanValue">
               <u-checkbox
                 v-for="(item, index) in blueBallArr"
                 :key="index"
                 :label="item.name"
                 :name="item.name"
+                :disabled="blueTuoValue.includes(item.name)"
                 :customStyle="{
                   margin: '6rpx',
-                  boxShadow: checkBlueBoxValue.includes(item.name)
+                  boxShadow: blueDanValue.includes(item.name)
+                    ? '0 4rpx 12rpx rgba(24,144,255,0.3)'
+                    : 'none',
+                  transition: 'all 0.3s ease'
+                }"
+                labelColor="#1890ff"
+                activeColor="#1890ff"
+                iconColor="#ffffff"
+                inactiveColor="#1890ff"
+                size="26"
+                shape="circle"
+              />
+            </u-checkbox-group>
+          </view>
+        </view>
+
+        <!-- 胆拖模式 - 蓝球拖码选择区 -->
+        <view class="ball-section" v-if="playMode === 'dantuo'">
+          <view class="section-header">
+            <view class="title-wrapper">
+              <text class="section-title blue-title">蓝球拖码</text>
+              <text class="ball-count">已选 {{ blueTuoValue.length }} 个（选1个）</text>
+            </view>
+          </view>
+          <view class="ball-grid">
+            <u-checkbox-group placement="row" @change="blueTuoChange" v-model="blueTuoValue">
+              <u-checkbox
+                v-for="(item, index) in blueBallArr"
+                :key="index"
+                :label="item.name"
+                :name="item.name"
+                :disabled="blueDanValue.includes(item.name)"
+                :customStyle="{
+                  margin: '6rpx',
+                  boxShadow: blueTuoValue.includes(item.name)
                     ? '0 4rpx 12rpx rgba(24,144,255,0.3)'
                     : 'none',
                   transition: 'all 0.3s ease'
@@ -269,10 +304,16 @@
                 <text v-for="(num, idx) in redTuoValue" :key="idx" class="realtime-number red-number">{{ num }}</text>
               </view>
             </view>
-            <view v-if="cpForm.blueBall && cpForm.blueBall.length" class="realtime-group">
-              <text class="group-label">蓝球:</text>
+            <view v-if="blueDanValue.length" class="realtime-group">
+              <text class="group-label dan-label">蓝胆:</text>
               <view class="number-list">
-                <text v-for="(num, idx) in cpForm.blueBall.split(',')" :key="idx" class="realtime-number blue-number">{{ num }}</text>
+                <text v-for="(num, idx) in blueDanValue" :key="idx" class="realtime-number blue-number dan-ball">{{ num }}</text>
+              </view>
+            </view>
+            <view v-if="blueTuoValue.length" class="realtime-group">
+              <text class="group-label tuo-label">蓝拖:</text>
+              <view class="number-list">
+                <text v-for="(num, idx) in blueTuoValue" :key="idx" class="realtime-number blue-number">{{ num }}</text>
               </view>
             </view>
           </view>
@@ -537,20 +578,23 @@ const calculateBetCount = () => {
       betCount.value = 0
     }
   } else if (playMode.value === 'dantuo') {
-    // 胆拖：红球胆码+拖码，蓝球普通选择
+    // 胆拖：红球胆码+拖码，蓝球胆码+拖码
     const redDanCount = redDanValue.value.length
     const redTuoCount = redTuoValue.value.length
-    const blueCount = checkBlueBoxValue.value.length
+    const blueDanCount = blueDanValue.value.length
+    const blueTuoCount = blueTuoValue.value.length
 
     // 红球需要选够：胆码 + 拖码组合 = requiredRed
-    // 拖码至少需要选 requiredRed - redDanCount 个
     const needRedTuo = requiredRed - redDanCount
+    // 蓝球需要选够：胆码 + 拖码组合 = requiredBlue
+    const needBlueTuo = requiredBlue - blueDanCount
 
     if (redDanCount >= 0 && redDanCount < requiredRed && 
         redTuoCount >= needRedTuo && redTuoCount > 0 &&
-        blueCount >= requiredBlue) {
+        blueDanCount >= 0 && blueDanCount < requiredBlue &&
+        blueTuoCount >= needBlueTuo && blueTuoCount > 0) {
       const redComb = combination(redTuoCount, needRedTuo)
-      const blueComb = combination(blueCount, requiredBlue)
+      const blueComb = combination(blueTuoCount, needBlueTuo)
       betCount.value = redComb * blueComb
     } else {
       betCount.value = 0
@@ -594,9 +638,15 @@ const updateFormFromDantuo = () => {
   const allRed = [...redDanValue.value, ...redTuoValue.value].sort((a, b) => parseInt(a) - parseInt(b))
   cpForm.value.redBall = allRed.join(',')
   
-  // 蓝球：普通选择（非胆拖）
-  const allBlue = [...checkBlueBoxValue.value].sort((a, b) => parseInt(a) - parseInt(b))
+  // 蓝球：胆码 + 拖码
+  const allBlue = [...blueDanValue.value, ...blueTuoValue.value].sort((a, b) => parseInt(a) - parseInt(b))
   cpForm.value.blueBall = allBlue.join(',')
+  
+  // 设置胆拖专用字段
+  cpForm.value.danRedBall = redDanValue.value.join(',')
+  cpForm.value.tuoRedBall = redTuoValue.value.join(',')
+  cpForm.value.danBlueBall = blueDanValue.value.join(',')
+  cpForm.value.tuoBlueBall = blueTuoValue.value.join(',')
 }
 
 const selectDate = arr => {
@@ -816,10 +866,11 @@ const submitNum = () => {
       return
     }
   } else if (playMode.value === 'dantuo') {
-    // 胆拖：红球胆码+拖码，蓝球普通选择
+    // 胆拖：红球胆码+拖码，蓝球胆码+拖码
     const redDanCount = redDanValue.value.length
     const redTuoCount = redTuoValue.value.length
-    const blueCount = checkBlueBoxValue.value.length
+    const blueDanCount = blueDanValue.value.length
+    const blueTuoCount = blueTuoValue.value.length
 
     if (redDanCount >= requiredRed) {
       uni.showToast({ title: `红球胆码最多${requiredRed - 1}个`, icon: 'none' })
@@ -833,8 +884,16 @@ const submitNum = () => {
       uni.showToast({ title: '红球拖码至少1个', icon: 'none' })
       return
     }
-    if (blueCount < requiredBlue) {
-      uni.showToast({ title: `蓝球至少选择${requiredBlue}个`, icon: 'none' })
+    if (blueDanCount >= requiredBlue) {
+      uni.showToast({ title: `蓝球胆码最多${requiredBlue - 1}个`, icon: 'none' })
+      return
+    }
+    if (blueDanCount + blueTuoCount < requiredBlue) {
+      uni.showToast({ title: `蓝球胆码+拖码至少${requiredBlue}个`, icon: 'none' })
+      return
+    }
+    if (blueTuoCount < 1) {
+      uni.showToast({ title: '蓝球拖码至少1个', icon: 'none' })
       return
     }
     if (betCount.value === 0) {
