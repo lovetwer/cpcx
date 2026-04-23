@@ -484,7 +484,6 @@ const cpForm = ref({
   blueBall: '',
   openTime: '',
   type: 'ssq',
-  playMode: 'normal',
   betType: 'single'
 })
 
