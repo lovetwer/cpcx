@@ -1,6 +1,6 @@
 <template>
   <view class="lottery-container">
-    <!-- 顶部导航 -->
+    <!-- 顶部导航 - 移除playMode字段版本 -->
     <view class="nav-header">
       <u-subsection
         :list="list"
